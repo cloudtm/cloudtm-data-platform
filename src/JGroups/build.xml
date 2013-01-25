@@ -1,0 +1,597 @@
+<?xml version="1.0"?>
+
+
+<project name="JGroups" default="compile" basedir=".">
+    <description>
+        build.xml file for JGroups. Needs Ant (jakarta.apache.org) to run
+    </description>
+
+    <property name="version" value="3.3.0.Alpha1"/>
+    <property name="build.properties.file" value="build.properties"/>
+    <property file="${build.properties.file}"/>
+    <property name="root.dir" value="${basedir}"/>
+    <property name="src.dir" value="${root.dir}/src"/>
+    <property name="tests.dir" value="${root.dir}/tests"/>
+    <property name="other.dir" value="${tests.dir}/other"/>
+    <property name="junit.dir" value="${tests.dir}/junit"/>
+    <property name="junit-functional.dir" value="${tests.dir}/junit-functional"/>
+    <property name="byteman.dir"          value="${tests.dir}/byteman"/>
+    <property name="time-sensitive.dir" value="${tests.dir}/time-sensitive"/>
+    <property name="stress.dir" value="${tests.dir}/stress"/>
+    <property name="perf.dir" value="${tests.dir}/perf"/>
+    <property name="util.dir" value="${tests.dir}/util"/>
+    <property name="compile.dir" value="${root.dir}/classes"/>
+    <property name="lib.dir" value="${root.dir}/lib"/>
+    <property name="license.dir" value="${lib.dir}/licenses"/>
+    <property name="dist.dir" value="${root.dir}/dist"/>
+    <property name="tmp.dir" value="${root.dir}/tmp"/>
+    <property name="doc.dir" value="${root.dir}/doc"/>
+    <property name="manual.dir" value="${doc.dir}/manual"/>
+    <property name="tutorial.dir" value="${doc.dir}/tutorial"/>
+    <property name="javadoc.dir" value="${dist.dir}/javadoc"/>
+    <property name="conf.dir" value="${root.dir}/conf"/>
+    <property name="testng.conf.dir" value="${root.dir}/conf/testng"/>
+    <property name="bin.dir"          value="${root.dir}/bin"/>
+    <property name="keystore.dir"     value="${root.dir}/keystore"/>
+    <property name="javadoc.packages" value="org.jgroups.*"/>
+    <property name="timestamp"        value=".timestamp"/>
+    <property name="protocols.xml"    value="${manual.dir}/en/modules/protocols.xml"/>
+    <property name="maven.executable" value="mvn"/>
+
+	<!-- 5 minutes per test suite timeout -->
+    <property name="unittest.timeout" value="1800000"/>
+
+    <!-- default properties used in all test targets -->
+    <property name="channel.conf" value="udp.xml"/>
+    <property name="threadcount" value="false"/>
+    <property name="test.verbose" value="0"/>
+
+    <path id="jg.classpath">
+        <pathelement location="${compile.dir}"/>
+        <pathelement location="${conf.dir}"/>
+        <pathelement location="${keystore.dir}"/>
+        <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <!-- We need to include tools.jar for byteman to inject code into a running agent -->
+    <path id="jg.classpath.byteman">
+        <path refid="jg.classpath"/>
+        <pathelement location="${java.home}/../lib/tools.jar"/>
+    </path>
+
+    <taskdef resource="testngtasks" classpathref="jg.classpath"/>
+
+    <!-- properties to determine IP version used -->
+    <condition property="java.net.preferIPv4Stack" value="true" else="false">
+      <isfalse value="${jgroups.useIPv6}"/>
+    </condition>
+
+    <condition property="java.net.preferIPv6Addresses" value="true" else="false">
+      <istrue value="${jgroups.useIPv6}"/>
+    </condition>
+
+    <!-- patternsets used to define test sets -->
+    <patternset id="flush.tests">
+        <include name="org/jgroups/tests/FlushTest*"/>
+    	<include name="org/jgroups/tests/ConcurrentStateTransferTest*"/>
+        <include name="org/jgroups/tests/ConcurrentStartupTest*"/>
+    </patternset>
+
+
+    <patternset id="all.tests">
+        <include name="org/jgroups/tests/**Test**"/>
+        <include name="org/jgroups/blocks/**Test**"/>
+    </patternset>
+
+    <patternset id="junit.excludes">
+        <exclude name="**/DistributedQueueTest*"/>
+        <exclude name="**/ChannelTestBase*"/>
+    </patternset>
+
+
+    <target name="prepare">
+        <property environment="env"/>
+        <mkdir dir="${compile.dir}"/>
+    	<copy file="${build.properties.file}.template" tofile="${build.properties.file}" overwrite="false"/>
+    </target>
+
+    <target name="compile"
+            depends="prepare"
+            description="Compiles all Java files">
+        <javac destdir="${compile.dir}"
+               source="1.6"
+               classpathref="jg.classpath"
+               includeantruntime="false"
+               debug="on"
+               deprecation="off"
+               optimize="off"
+               listfiles="false"
+               includes="org/jgroups/**">
+            <exclude name="**/obsolete/**"/>
+            <src path="${src.dir}"/>
+            <src path="${other.dir}"/>
+            <src path="${junit.dir}"/>
+            <src path="${junit-functional.dir}"/>
+            <src path="${byteman.dir}"/>
+            <src path="${stress.dir}"/>
+            <src path="${perf.dir}"/>
+            <src path="${util.dir}"/>
+        </javac>
+    </target>
+
+
+    <target name="compile-no-unittests"
+            depends="prepare"
+            description="Compiles all Java files">
+        <javac srcdir="${src.dir}"
+               destdir="${compile.dir}"
+               source="1.6"
+               classpathref="jg.classpath"
+               includeantruntime="false"
+               debug="on"
+               deprecation="off"
+               optimize="off"
+               listfiles="false"
+               includes="org/jgroups/**">
+            <exclude name="**/obsolete/**"/>
+        </javac>
+    </target>
+
+    <target name="compile-essential-unittests"
+            depends="prepare"
+            description="Compiles only tests shipped with JGroups">
+        <javac destdir="${compile.dir}"
+               source="1.6"
+               classpathref="jg.classpath"
+               includeantruntime="false"
+               debug="on"
+               deprecation="off"
+               optimize="off"
+               listfiles="false"
+               includes="org/jgroups/tests/**">
+            <src path="${tests.dir}/perf"/>
+            <src path="${tests.dir}/other"/>
+            <exclude name="**/obsolete/**"/>
+        </javac>
+    </target>
+
+
+    <target name="jar"
+            description="Compiles and creates JAR files in the ./dist directory"
+            depends="jgroups.jar,jgroups-sources.jar">
+        <copy file="${doc.dir}/README" tofile="${dist.dir}/README" overwrite="true"/>
+
+    </target>
+
+
+    <target name="jgroups.jar"
+            description="Creates the jgroups-${version}.jar (includes everything)"
+            depends="clean,compile-no-unittests,compile-essential-unittests,create-schema">
+        <mkdir dir="${dist.dir}"/>
+        <xmlproperty file="${ant.file}" collapseAttributes="true" prefix="bnd"/>
+        <property name="bndclasspath" refid="jg.classpath"/>
+        <property name="-savemanifest" value="${conf.dir}/MANIFEST.MF"/>
+        <property name="-output" value="${conf.dir}"/>
+        <taskdef resource="aQute/bnd/ant/taskdef.properties" classpathref="jg.classpath"/>
+        <bnd
+                classpath="${bndclasspath}"
+                eclipse="false"
+                failok="false"
+                exceptions="true"
+                files="${conf.dir}/jgroups.bnd" />
+        <jar destfile="${dist.dir}/jgroups-${version}.jar"
+             basedir="${compile.dir}"
+             manifest="${conf.dir}/MANIFEST.MF"
+             includes="org/jgroups/**">
+            <fileset dir="${conf.dir}" includes="*.dtd, *.xml, jg-messages*.properties" excludes="*-service.xml"/>
+            <fileset dir="${compile.dir}/schema">
+                <include name="*.xsd"/>
+            </fileset>
+            <fileset dir="${root.dir}">
+                <include name="INSTALL.html"/>
+                <include name="LICENSE"/>
+                <include name="README"/>
+            </fileset>
+            <fileset dir="${lib.dir}">
+                <include name="licenses/thirdparty*"/>
+            </fileset>
+        </jar>
+    </target>
+
+
+    <target name="jgroups-sources.jar"
+            description="Creates the jgroups-sources.jar. Includes only core source files, no demos, no tests">
+        <mkdir dir="${dist.dir}"/>
+        <property name="bndclasspath" refid="jg.classpath"/>
+        <property name="-savemanifest" value="${conf.dir}/MANIFEST.MF"/>
+        <property name="-output" value="${conf.dir}"/>
+        <taskdef resource="aQute/bnd/ant/taskdef.properties" classpathref="jg.classpath"/>
+        <bnd
+              classpath=""
+              eclipse="false"
+              failok="false"
+              exceptions="true"
+              files="${conf.dir}/jgroups.bnd" />
+        <jar jarfile="${dist.dir}/jgroups-sources.jar"
+             basedir="${src.dir}"
+             manifest="${conf.dir}/MANIFEST.MF"
+             includes="org/jgroups/**">
+        </jar>
+    </target>
+
+
+
+    <!-- generate java doc -->
+    <target name="javadoc"
+            depends="prepare,check-javadoc" unless="javadoc.exists"
+            description="Create Javadoc documentation in the ./dist/javadoc directory">
+         <mkdir dir="${javadoc.dir}"/>
+        <javadoc packagenames="${javadoc.packages}"
+                 sourcepath="${src.dir}"
+                 destdir="${javadoc.dir}"
+                 classpathref="jg.classpath"
+                 author="true"
+                 version="true"
+                 use="true"
+                 bottom="Copyright &#169; 1998-2012 Bela Ban / Red Hat. All Rights Reserved."
+                 useexternalfile="yes"
+                 doctitle="JGroups"
+                 overview="${src.dir}/org/jgroups/overview.html">
+            <!-- The tag option for Javadoc is available in Java 1.4 or later. -->
+            <tag name="todo" description="To do:"/>
+        </javadoc>
+    </target>
+
+    <target name="check-javadoc" description="Checks whether the ./dist/javadoc dir exists">
+        <available file="${javadoc.dir}" type="dir" property="javadoc.exists"/>
+    </target>
+
+    <target name="all" depends="compile"/>
+
+    <target name="docs" description="Build all html and pdf docs" depends="manual,tutorial">
+    </target>
+
+    <target name="manual" description="Build all html and pdf docs"
+            depends="check-manual,compile" unless="manual.up-to-date">
+        <echo message="Building manual from docbook ..."/>
+        <prot-properties-to-doc input="${protocols.xml}"/>
+        <run-maven dir="${manual.dir}"/>
+    	<!--<delete file="${protocols.xml}.tmp"/>-->
+        <touch file="${manual.dir}/target/timestamp"/>
+    </target>
+
+
+    <target name="tutorial" description="Build all html and pdf docs"
+            depends="check-tutorial" unless="tutorial.up-to-date">
+        <echo message="Building tutorial from docbook ..."/>
+        <run-maven dir="${tutorial.dir}"/>
+        <touch file="${tutorial.dir}/target/timestamp"/>
+    </target>
+
+
+    <target name="check-tutorial">
+        <uptodate property="tutorial.up-to-date" targetfile="${tutorial.dir}/target/timestamp">
+            <srcfiles dir="${tutorial.dir}/en" includes="**/*">
+            </srcfiles>
+        </uptodate>
+        <echo message="tutorial.up-to-data=${tutorial.up-to-date}"/>
+    </target>
+
+    <target name="check-manual">
+        <uptodate property="manual.up-to-date" targetfile="${manual.dir}/target/timestamp">
+            <srcfiles dir="${manual.dir}/en" includes="**/*">
+            </srcfiles>
+        </uptodate>
+        <echo message="manual.up-to-data=${manual.up-to-date}"/>
+    </target>
+
+
+	<target name="create-schema" description="creates XML schema for this version of JGroups">
+		<delete dir="${compile.dir}/schema" failonerror="false"/>
+		<mkdir dir="${compile.dir}/schema"/>
+		<java classname="org.jgroups.util.XMLSchemaGenerator" classpathref="jg.classpath">
+			<arg line="-o ${compile.dir}/schema"/>
+		</java>
+	</target>
+
+
+    <target name="clean"
+            description="Removes all class files and the ./dist directory">
+        <delete dir="${compile.dir}" failonerror="false"/>
+        <delete dir="${dist.dir}" failonerror="false"/>
+        <delete dir="${tmp.dir}" failonerror="false"/>
+        <delete dir="${root.dir}/test-output" failonerror="false"/>
+        <delete dir="${root.dir}/target" failonerror="false"/>
+        <delete dir="${keystore.dir}" failonerror="false"/>
+        <delete file="${lib.dir}/jboss-test.jar" failonerror="false"/>
+        <delete file="${root.dir}/velocity.log*" failonerror="false"/>
+        <delete file="${conf.dir}/MANIFEST.MF" failonerror="false"/>
+        <delete>
+            <fileset dir="${root.dir}" defaultexcludes="no">
+                <include name="**/*~"/>
+            </fileset>
+        </delete>
+    	<!-- clean the docs directory if docs have been processed -->
+        <delete dir="${manual.dir}/target"/>
+        <delete dir="${tutorial.dir}/target"/>
+        <delete dir="${root.dir}/schema" failonerror="false"/>
+    </target>
+
+
+
+    <target name="version"
+            depends="compile"
+            description="Prints some info about the Ant version and the OS/JDK used">
+        <echo message="${ant.version}"/>
+        <echo message="JDK=${java.vm.version} on ${os.name} ${os.version}"/>
+        <java classname="org.jgroups.Version" classpathref="jg.classpath"/>
+    </target>
+
+
+    <target name="makeKeystore" unless="isKeyStoreGenerated"
+            depends="keyStoreGenerated, compile"
+            description="Generates an appropriate temporary keystore file for the unit tests and the JVM in use">
+        <mkdir dir="${keystore.dir}"/>
+        <java classname="org.jgroups.demos.KeyStoreGenerator" fork="false">
+            <arg value="--storeName"/>
+            <arg value="keystore/defaultStore.keystore"/>
+            <classpath refid="jg.classpath"/>
+        </java>
+        <java classname="org.jgroups.demos.KeyStoreGenerator" fork="false">
+            <arg value="--storeName"/>
+            <arg value="keystore/defaultStore2.keystore"/>
+            <classpath refid="jg.classpath"/>
+        </java>
+    </target>
+
+	<target name="keyStoreGenerated">
+	    <condition property="isKeyStoreGenerated">
+	        <and>
+	            <available filepath="${keystore.dir}" file="defaultStore.keystore"/>
+	    		<available filepath="${keystore.dir}" file="defaultStore2.keystore"/>
+	        </and>
+	    </condition>
+	</target>
+
+	<target name="postcompile" depends="makeKeystore">
+	</target>
+
+    <!--
+=============================== TestNG ======================================== -->
+
+    <target name="all-tests-cc">
+        <antcall target="all-tests"/>
+    </target>
+
+    <target name="all-new-tests">
+        <antcall target="all-tests"/>
+    </target>
+
+    <target name="all-tests">
+        <sequential>
+        	<antcall target="functional"/>
+        	<antcall target="stack-independent"/>
+            <antcall target="udp"/>
+            <antcall target="tcp"/>
+            <antcall target="tcp-stress"/>
+        	<antcall target="udp-flush"/>
+        	<antcall target="tcp-flush"/>
+            <antcall target="time-sensitive"/>
+            <antcall target="byteman"/>
+        </sequential>
+    </target>
+
+    <target name="functional" depends="postcompile">
+        <mkdir dir="${tmp.dir}/test-results/xml/functional"/>
+        <testng classpathref="jg.classpath"
+                usedefaultlisteners="false"
+                outputdir="${tmp.dir}/test-results/xml"
+                listeners="org.jgroups.util.JUnitXMLReporter"
+                threadcount="10"
+                parallel="methods"
+                >
+        	<jvmarg value="-Djava.net.preferIPv4Stack=${java.net.preferIPv4Stack}"/>
+        	<jvmarg value="-Djava.net.preferIPv6Addresses=${java.net.preferIPv6Addresses}"/>
+            <xmlfileset dir="${testng.conf.dir}" includes="functional.xml"/>
+        </testng>
+    </target>
+
+    <target name="byteman" depends="postcompile">
+        <mkdir dir="${tmp.dir}/test-results/xml/byteman"/>
+        <testng classpathref="jg.classpath.byteman"
+                usedefaultlisteners="false"
+                outputdir="${tmp.dir}/test-results/xml"
+                listeners="org.jgroups.util.JUnitXMLReporter"
+                threadcount="1"
+                parallel="false" 
+                >
+        	<jvmarg value="-Djava.net.preferIPv4Stack=${java.net.preferIPv4Stack}"/>
+        	<jvmarg value="-Djava.net.preferIPv6Addresses=${java.net.preferIPv6Addresses}"/>
+            <jvmarg value="-Djgroups.bind_addr=${jgroups.bind_addr}"/>
+            <xmlfileset dir="${testng.conf.dir}" includes="byteman.xml"/>
+        </testng>
+    </target>
+
+    <target name="time-sensitive" depends="postcompile">
+        <mkdir dir="${tmp.dir}/test-results/xml/time-sensitive"/>
+        <testng classpathref="jg.classpath"
+                usedefaultlisteners="false"
+                outputdir="${tmp.dir}/test-results/xml"
+                listeners="org.jgroups.util.JUnitXMLReporter"
+                threadcount="1"
+                parallel="methods"
+                >
+        	<jvmarg value="-Djava.net.preferIPv4Stack=${java.net.preferIPv4Stack}"/>
+        	<jvmarg value="-Djava.net.preferIPv6Addresses=${java.net.preferIPv6Addresses}"/>
+            <xmlfileset dir="${testng.conf.dir}" includes="time-sensitive.xml"/>
+        </testng>
+    </target>
+
+    <target name="stack-independent" depends="postcompile">
+        <mkdir dir="${tmp.dir}/test-results/xml/stack-independent"/>
+        <runtest testname.ext="ind"
+                 threadcount="1"
+                 parallel="tests"
+                 testng.xmlfile="stack-independent.xml"
+                />
+    </target>
+
+
+    <target name="udp" depends="postcompile">
+        <mkdir dir="${tmp.dir}/test-results/xml/udp"/>
+        <runtest testname.ext="udp"
+                 threadcount="5"
+                 parallel="tests"
+                 initial.mcast.addr="${jgroups.udp.mcast_addr}"
+                 initial.mcast.port="25000"
+                 initial.tcp.port="25000"
+                 testng.xmlfile="testng-udp.xml"
+                />
+    </target>
+
+    <target name="udp-flush" depends="postcompile">
+        <mkdir dir="${tmp.dir}/test-results/xml/udp-flush"/>
+        <runtest testname.ext="udp-flush"
+                 threadcount="5"
+                 parallel="tests"
+                 initial.mcast.addr="${jgroups.udp.mcast_addr}"
+                 initial.mcast.port="26000"
+                 initial.tcp.port="26000"
+                 testng.xmlfile="testng-udp-flush.xml"
+                />
+    </target>
+
+    <target name="tcp" depends="postcompile">
+    	<!-- Needed to force reading of properties. Otherwise tcp tests will fail -->
+    	<property name="build.properties.file" value="build.properties"/>
+    	<property file="${build.properties.file}"/>
+
+    	<mkdir dir="${tmp.dir}/test-results/xml/tcp"/>
+        <runtest testname.ext="tcp"
+                 threadcount="5"
+                 parallel="tests"
+                 initial.mcast.addr="${jgroups.udp.mcast_addr}"
+                 initial.mcast.port="27000"
+                 initial.tcp.port="27000"
+                 testng.xmlfile="testng-tcp.xml"
+                 tcp.recv.buf.size="50000"
+                 tcp.send.buf.size="10000"
+                />
+    </target>
+
+    <target name="tcp-stress" depends="postcompile">
+    	<!-- Needed to force reading of properties. Otherwise tcp tests will fail -->
+    	<property name="build.properties.file" value="build.properties"/>
+    	<property file="${build.properties.file}"/>
+
+    	<mkdir dir="${tmp.dir}/test-results/xml/tcp"/>
+        <runtest testname.ext="tcp"
+                 threadcount="1"
+                 parallel="tests"
+                 initial.mcast.addr="${jgroups.udp.mcast_addr}"
+                 initial.mcast.port="28000"
+                 initial.tcp.port="28000"
+                 testng.xmlfile="testng-tcp-stress.xml"
+                 tcp.recv.buf.size="50000"
+                 tcp.send.buf.size="10000"
+                />
+    </target>
+
+    <target name="tcp-flush" depends="postcompile">
+    	<!-- Needed to force reading of properties. Otherwise tcp-flush tests will fail -->
+    	<property name="build.properties.file" value="build.properties"/>
+    	<property file="${build.properties.file}"/>
+    	<mkdir dir="${tmp.dir}/test-results/xml/tcp-flush"/>
+        <runtest testname.ext="tcp-flush"
+                 threadcount="10"
+                 parallel="tests"
+                 initial.mcast.addr="${jgroups.udp.mcast_addr}"
+                 initial.mcast.port="29000"
+                 initial.tcp.port="29000"
+                 testng.xmlfile="testng-tcp-flush.xml"
+                 tcp.recv.buf.size="50000"
+                 tcp.send.buf.size="10000"
+                />
+    </target>
+
+    <target name="report">
+        <antcall target="reports"/>
+    </target>
+
+    <target name="reports">
+        <mkdir dir="${tmp.dir}/test-results/html"/>
+        <junitreport todir="${tmp.dir}/test-results/html">
+            <fileset dir="${tmp.dir}/test-results/xml">
+                <include name="**/*.xml"/>
+            </fileset>
+            <report format="frames"  todir="${tmp.dir}/test-results/html"/>
+        </junitreport>
+        <echo message="******************************************************************"/>
+        <echo message="The test report is ${tmp.dir}/test-results/html/index.html"/>
+        <echo message="******************************************************************"/>
+    </target>
+
+
+    <macrodef name="runtest" description="Runs a configuration-dependent test suite">
+        <attribute name="outputdir" default="${tmp.dir}/test-results/xml"/>
+        <attribute name="parallel" default="methods"/>
+        <attribute name="testname.ext" default="udp"/>
+        <attribute name="threadcount" default="1"/>
+        <attribute name="testng.xmlfile" default="stack-dependent.xml"/>
+        <attribute name="initial.mcast.addr" default="${jgroups.udp.mcast_addr}"/>
+        <attribute name="initial.mcast.port" default="23000"/>
+        <attribute name="initial.tcp.port" default="23000"/>
+        <attribute name="tcp.recv.buf.size" default="200000"/>
+        <attribute name="tcp.send.buf.size" default="64000"/>
+        <sequential>
+            <testng classpathref="jg.classpath"
+                    usedefaultlisteners="false"
+                    outputdir="@{outputdir}"
+                    listeners="org.jgroups.util.JUnitXMLReporter"
+            		timeout="${unittest.timeout}"
+            	    verbose="${test.verbose}"
+                    >
+                <xmlfileset dir="${testng.conf.dir}" includes="@{testng.xmlfile}"/>
+                <sysproperty key="test.suffix" value="@{testname.ext}"/>
+                <sysproperty key="INITIAL_MCAST_ADDR" value="@{initial.mcast.addr}"/>
+                <sysproperty key="INITIAL_MCAST_PORT" value="@{initial.mcast.port}"/>
+                <sysproperty key="INITIAL_TCP_PORT" value="@{initial.tcp.port}"/>
+                <sysproperty key="tcp.recv_buf_size" value="@{tcp.recv.buf.size}"/>
+                <sysproperty key="tcp.send_buf_size" value="@{tcp.send.buf.size}"/>
+                <jvmarg value="-Djgroups.bind_addr=${jgroups.bind_addr}"/>
+                <jvmarg value="-Djgroups.tcpping.initial_hosts=${jgroups.tcpping.initial_hosts}"/>
+                <jvmarg value="-Djgroups.tunnel.gossip_router_hosts=${jgroups.tunnel.gossip_router_hosts}"/>
+                <jvmarg value="-Dtests.tmp.dir=${tmp.dir}"/>
+                <jvmarg value="-Dlog4j.configuration=file:${conf.dir}/log4j.properties"/>
+                <jvmarg value="-Djava.net.preferIPv4Stack=${java.net.preferIPv4Stack}"/>                
+    		  	<jvmarg value="-Djava.net.preferIPv6Addresses=${java.net.preferIPv6Addresses}"/>
+                <jvmarg value="-Xms400M"/>
+                <jvmarg value="-Xmx800M"/>
+            </testng>
+        </sequential>
+    </macrodef>
+
+
+    <macrodef name="prot-properties-to-doc">
+        <attribute name="input" default="${protocols.xml}"/>
+        <sequential>
+            <echo message="Replacing variables in @{input}"/>
+            <java classname="org.jgroups.util.PropertiesToXML" classpathref="jg.classpath">
+                <arg value="@{input}"/>
+            </java>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="run-maven">
+        <attribute name="dir"/>
+        <sequential>
+            <echo message="Running maven on @{dir}/pom.xml"/>
+            <exec executable="${maven.executable}" dir="@{dir}">
+                <arg line="compile"/>
+            </exec>
+        </sequential>
+    </macrodef>
+
+</project>

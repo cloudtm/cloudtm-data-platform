@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>pt.ist</groupId>
+        <artifactId>fenix-framework-parent</artifactId>
+        <!-- Perhaps in Maven 3.1 the version may be ommitted -->
+        <version>2.1-cloudtm-SNAPSHOT</version>
+        <relativePath>parent/pom.xml</relativePath>
+    </parent>
+
+    <artifactId>fenix-framework</artifactId>
+    <packaging>pom</packaging>
+    <name>Fenix Framework Distribution</name>
+    <url>http://fenix-ashes.ist.utl.pt</url>
+
+    <description>
+        Builds the complete Fenix Framework distribution
+    </description>
+
+    <modules>
+        <module>parent</module>
+        <module>project</module>
+        <module>dml-compiler</module>
+        <module>dml-maven-plugin</module>
+        <module>core</module>
+        <module>adt-bplustree</module>
+        <module>data-access-patterns</module>
+        <module>txintrospector</module>
+        <module>hibernate-search</module>
+        <module>indexes</module>
+        <module>bplustree-domain-object</module>
+        <module>linkedlist-domain-object</module>
+        <module>skiplist-domain-object</module>
+    	<module>backend-mem</module>
+        <module>backend-infinispan</module>
+        <module>backend-ogm</module>
+        <module>backend-jvstm-mem</module>
+        <module>test</module>
+        <module>archetypes</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${version.maven.javadoc-plugin}</version>
+                <configuration>
+                    <!-- get all sub-projects -->
+                    <aggregate>true</aggregate>
+                    <!-- 
+                         use pretty UML graph. Note about UmlGraph: You must
+                         have the Graphviz binary in your PATH, or the images
+                         will not be generated. For more information about
+                         Graphviz, please refer to http://www.graphviz.org/
+                    -->
+                    <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+                    <docletArtifact>
+                        <groupId>org.umlgraph</groupId>
+                        <artifactId>doclet</artifactId>
+                        <version>${version.maven.umlgraph-doclet-plugin}</version>
+                    </docletArtifact>
+                    <additionalparam>-views</additionalparam>
+                    <useStandardDocletOptions>true</useStandardDocletOptions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build> 
+
+</project>

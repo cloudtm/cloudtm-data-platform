@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<infinispan
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:infinispan:config:5.2 http://www.infinispan.org/schemas/infinispan-config-5.2.xsd"
+        xmlns="urn:infinispan:config:5.2">
+    <global>
+        <globalJmxStatistics
+                enabled="false"
+                jmxDomain="org.demo"
+                />
+        <transport
+                clusterName="scenario-3-repl-cluster">
+            <properties>
+                <property
+                        name="configurationFile"
+                        value="jgroups.xml"/>
+            </properties>
+        </transport>
+
+    </global>
+    <default>
+        <locking
+                isolationLevel="SERIALIZABLE"
+                concurrencyLevel="32"
+                writeSkewCheck="false"
+                useLockStriping="false"
+                lockAcquisitionTimeout="5000"/>
+        <jmxStatistics
+                enabled="false"/>
+        <deadlockDetection
+                enabled="false"/>
+        <transaction
+                transactionManagerLookupClass="org.infinispan.transaction.lookup.JBossStandaloneJTAManagerLookup"
+                useEagerLocking="false"
+                transactionMode="TRANSACTIONAL"
+                syncRollbackPhase="false"
+                cacheStopTimeout="30000"
+                useSynchronization="false"
+                syncCommitPhase="true"
+                lockingMode="OPTIMISTIC"
+                eagerLockSingleNode="false"
+                use1PcForAutoCommitTransactions="false"
+                autoCommit="true"/>
+        <versioning
+                enabled="true"
+                versioningScheme="GMU"/>
+        <clustering mode="r">
+            <sync
+                    replTimeout="15000"
+                    />
+            <stateTransfer
+                    fetchInMemoryState="false"
+                    />
+        </clustering>
+    </default>
+</infinispan>
+

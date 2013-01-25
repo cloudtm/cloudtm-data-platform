@@ -1,0 +1,12 @@
+# maven
+target/
+# intellij idea
+.idea/
+*.iml
+*.iws
+*.ipr
+# others
+PutObjectStoreHere/
+ObjectStore/
+bin/
+*.log

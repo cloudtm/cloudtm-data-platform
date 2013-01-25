@@ -1,0 +1,1219 @@
+<?xml version="1.0"?>
+<plugin name="Infinispan"
+        displayName="InfinispanPlugin"
+        description="Supports management and monitoring of Infinispan"
+        package="org.infinispan.rhq"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="urn:xmlns:rhq-plugin"
+        xmlns:c="urn:xmlns:rhq-configuration">
+
+   <depends plugin="JMX" useClasses="true"/>
+
+   <service name="Infinispan Cache Manager"
+            discovery="CacheManagerDiscovery"
+            class="CacheManagerComponent"
+            
+            
+             
+          >
+
+            <runs-inside>
+                <parent-resource-type name="JBossAS Server" plugin="JBossAS5"/>
+                <parent-resource-type name="Profile" plugin="jboss-as-7"/>
+                <parent-resource-type name="JBossAS7 Standalone Server" plugin="jboss-as-7"/>
+                <parent-resource-type name="JBossAS Server" plugin="JBossAS"/>
+                <parent-resource-type name="JMX Server" plugin="JMX"/>
+            </runs-inside>
+
+
+           <operation name="startCacheWithCacheName" displayName="Starts a cache with the given name" description="Starts a named cache from this cache manager">
+              <parameters>
+                 <c:simple-property name="cacheName" description="Name of cache to start"/>
+              </parameters>
+           </operation>
+           <operation name="startCache" displayName="Starts the default cache" description="Starts the default cache associated with this cache manager">
+           </operation>
+
+           <metric property="TotalBytesWritten" displayName="Number of total number of bytes written" displayType="summary" units="none" dataType="measurement"
+                   description="Returns the total number of bytes written by the server back to clients which includes both protocol and user information." />
+           <metric property="HostName" displayName="Host name" displayType="summary" units="none" dataType="trait"
+                   description="Returns the host to which the transport binds." />
+           <metric property="ReceiveBufferSize" displayName="Receive buffer size" displayType="summary" units="none" dataType="trait"
+                   description="Returns the receive buffer size." />
+           <metric property="TpcNoDelay" displayName="TCP no delay" displayType="summary" units="none" dataType="trait"
+                   description="Returns whether TCP no delay was configured or not." />
+           <metric property="IdleTimeout" displayName="Idle timeout" displayType="summary" units="none" dataType="trait"
+                   description="Returns the idle timeout." />
+           <metric property="SendBufferSize" displayName="Send buffer size" displayType="summary" units="none" dataType="trait"
+                   description="Returns the send buffer size." />
+           <metric property="NumberWorkerThreads" displayName="Number of worker threads" displayType="summary" units="none" dataType="trait"
+                   description="Returns the number of worker threads." />
+           <metric property="Port" displayName="Port" displayType="summary" units="none" dataType="trait"
+                   description="Returns the port to which the transport binds." />
+           <metric property="TotalBytesRead" displayName="Number of total number of bytes read" displayType="summary" units="none" dataType="measurement"
+                   description="Returns the total number of bytes read by the server from clients which includes both protocol and user information." />
+           <metric property="Name" displayName="Cache manager name" displayType="summary" units="none" dataType="trait"
+                   description="The name of this cache manager" />
+           <metric property="Version" displayName="Infinispan version" displayType="summary" units="none" dataType="trait"
+                   description="Infinispan version." />
+           <metric property="CreatedCacheCount" displayName="Number of caches created" displayType="summary" units="none" dataType="measurement"
+                   description="The total number of created caches, including the default cache." />
+           <metric property="PhysicalAddresses" displayName="Physical network addresses" displayType="summary" units="none" dataType="trait"
+                   description="The physical network addresses associated with this instance" />
+           <metric property="ClusterSize" displayName="Cluster size" displayType="summary" units="none" dataType="measurement"
+                   description="Size of the cluster in number of nodes" />
+           <metric property="RunningCacheCount" displayName="Number of running caches" displayType="summary" units="none" dataType="measurement"
+                   description="The total number of running caches, including the default cache." />
+           <metric property="CacheManagerStatus" displayName="Cache manager status" displayType="summary" units="none" dataType="trait"
+                   description="The status of the cache manager instance." />
+           <metric property="NodeAddress" displayName="Network address" displayType="summary" units="none" dataType="trait"
+                   description="The network address associated with this instance" />
+           <metric property="DefinedCacheNames" displayName="List of defined caches" displayType="summary" units="none" dataType="trait"
+                   description="The defined cache names and their statuses.  The default cache is not included in this representation." />
+           <metric property="DefinedCacheCount" displayName="Number of caches defined" displayType="summary" units="none" dataType="measurement"
+                   description="The total number of defined caches, excluding the default cache." />
+           <metric property="ClusterMembers" displayName="Cluster members" displayType="summary" units="none" dataType="trait"
+                   description="List of members in the cluster" />
+
+
+
+       <service name="Infinispan Cache"
+            discovery="CacheDiscovery"
+            class="CacheComponent"
+            
+            
+             
+          >
+
+
+
+           <operation name="DistributionManager.locateKey" displayName="[DistributionManager] Locate key" description="Locates an object in a cluster.  Only works with String keys.">
+              <parameters>
+                 <c:simple-property name="key" description="Key to locate"/>
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="DistributionManager.isAffectedByRehash" displayName="[DistributionManager] Could key be affected by rehash?" description="Determines whether a given key is affected by an ongoing rehash, if any.">
+              <parameters>
+                 <c:simple-property name="key" description="Key to check"/>
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="DistributionManager.isLocatedLocally" displayName="[DistributionManager] Is key local?" description="Tells you whether a given key is local to this instance of the cache.  Only works with String keys.">
+              <parameters>
+                 <c:simple-property name="key" description="Key to query"/>
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="Invalidation.setStatisticsEnabled" displayName="[Invalidation] Enable/disable statistics" description="Enable/disable statistics">
+              <parameters>
+                 <c:simple-property name="enabled" description="Whether statistics should be enabled or disabled (true/false)"/>
+              </parameters>
+           </operation>
+           <operation name="Invalidation.resetStatistics" displayName="[Invalidation] Reset statistics" description="Resets statistics gathered by this component">
+           </operation>
+           <operation name="Cache.stop" displayName="[Cache] Stops cache." description="Stops the cache.">
+           </operation>
+           <operation name="Cache.start" displayName="[Cache] Starts cache." description="Starts the cache.">
+           </operation>
+           <operation name="RpcManager.setStatisticsEnabled" displayName="[RpcManager] Enable/disable statistics" description="Enable/disable statistics">
+              <parameters>
+                 <c:simple-property name="enabled" description="Whether statistics should be enabled or disabled (true/false)"/>
+              </parameters>
+           </operation>
+           <operation name="RpcManager.resetStatistics" displayName="[RpcManager] Reset statistics" description="Resets statistics gathered by this component">
+           </operation>
+           <operation name="GMUDistributionManager.locateKey" displayName="[GMUDistributionManager] Locate key" description="Locates an object in a cluster.  Only works with String keys.">
+              <parameters>
+                 <c:simple-property name="key" description="Key to locate"/>
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="GMUDistributionManager.isAffectedByRehash" displayName="[GMUDistributionManager] Could key be affected by rehash?" description="Determines whether a given key is affected by an ongoing rehash, if any.">
+              <parameters>
+                 <c:simple-property name="key" description="Key to check"/>
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="GMUDistributionManager.isLocatedLocally" displayName="[GMUDistributionManager] Is key local?" description="Tells you whether a given key is local to this instance of the cache.  Only works with String keys.">
+              <parameters>
+                 <c:simple-property name="key" description="Key to query"/>
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="Passivation.resetStatistics" displayName="[Passivation] Reset statistics" description="Resets statistics gathered by this component">
+           </operation>
+           <operation name="ExtendedStatistics.getAvgNumPutsBySuccessfulLocalTxParam" displayName="[ExtendedStatistics] Number of puts per class" description="Average number of puts performed by a successful local transaction per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgRemoteGetsPerWrTransactionParam" displayName="[ExtendedStatistics] Average number of remote get operations per (local) read-write transaction per class" description="Average number of remote get operations per (local) read-write transaction per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getNumberOfGetsParam" displayName="[ExtendedStatistics] Number of Gets per class" description="Number of gets performed since last reset per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgGetsPerWrTransaction" displayName="[ExtendedStatistics] Average number of get operations per (local) read-write transaction" description="Average number of get operations per (local) read-write transaction">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgNumNodesCompleteNotificationParam" displayName="[ExtendedStatistics] Average Number of Nodes in Complete Notification Destination Set per class" description="Average number of nodes in Complete Notification destination set per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getNumberOfLocalCommits" displayName="[ExtendedStatistics] Number Of Local Commits" description="Number of local committed transactions since last reset">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getRemotePutExecutionTimeParam" displayName="[ExtendedStatistics] Remote put cost per class" description="Average cost of a remote put per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getRemoteGetExecutionTimeParam" displayName="[ExtendedStatistics] Remote get cost per class" description="Average cost of a remote get per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgCommitCommandSizeParam" displayName="[ExtendedStatistics] Average Commit Command Size per class" description="Average commit command size (in bytes) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getNumberOfGets" displayName="[ExtendedStatistics] Number of Gets" description="Number of gets performed since last reset">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgLocalGetTimeParam" displayName="[ExtendedStatistics] Average Local Get time per class" description="Average Local processing Get time (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgPrepareAsyncParam" displayName="[ExtendedStatistics] Average Prepare Async per class" description="Average asynchronous Prepare duration (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgCompleteNotificationAsyncParam" displayName="[ExtendedStatistics] Average Complete Notification Async per class" description="Average asynchronous Complete Notification duration (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getPercentageSuccessWriteTransactionsParam" displayName="[ExtendedStatistics] Percentage of Successfully Write Transactions per class" description="Percentage of Write transaction executed in all successfully executed transactions (local transaction only) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgLockWaitingTimeParam" displayName="[ExtendedStatistics] Average Lock Waiting Time per class" description="Average time waiting for the lock acquisition (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getNumberOfPuts" displayName="[ExtendedStatistics] Number of Puts" description="Number of puts performed since last reset">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgClusteredGetCommandSizeParam" displayName="[ExtendedStatistics] Average Clustered Get Command Size per class" description="Average clustered get command size (in bytes) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getPercentileRemoteWriteTransaction" displayName="[ExtendedStatistics] K-th Percentile Remote Write Transactions" description="K-th percentile of remote write transactions execution time">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgRemoteGetRttParam" displayName="[ExtendedStatistics] Average Remote Get RTT per class" description="Average Remote Get Round-Trip Time duration (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgRemoteRollbackTimeParam" displayName="[ExtendedStatistics] Average Remote Rollback Execution Time per class" description="Average time it takes to execute the rollback command remotely (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getPercentileLocalRWriteTransaction" displayName="[ExtendedStatistics] K-th Percentile Local Write Transactions" description="K-th percentile of local write transactions execution time">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getNumberOfLocalCommitsParam" displayName="[ExtendedStatistics] Number Of Local Commits per class" description="Number of local committed transactions since last reset per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgWriteTxLocalExecutionParam" displayName="[ExtendedStatistics] Average Write Transaction Local Execution Time per class" description="Average write transaction local execution time (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgNumOfLockLocalTxParam" displayName="[ExtendedStatistics] Average Number of Lock per Local Transaction per class" description="Average number of locks per write local transaction per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getNumberOfPutsParam" displayName="[ExtendedStatistics] Number of Puts per class" description="Number of puts performed since last reset per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgPrepareCommandSizeParam" displayName="[ExtendedStatistics] Average Prepare Command Size per class" description="Average prepare command size (in bytes) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgLockHoldTimeParam" displayName="[ExtendedStatistics] Average Lock Holding Time per class" description="Average lock holding time (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgNumOfLockSuccessLocalTxParam" displayName="[ExtendedStatistics] Average Number of Lock per Successfully Local Transaction per class" description="Average number of locks per successfully write local transaction per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgTxArrivalRateParam" displayName="[ExtendedStatistics] Average Transaction Arrival Rate per class" description="Average transaction arrival rate, originated locally and remotely (in transaction per second) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgGetsPerROTransactionParam" displayName="[ExtendedStatistics] Average number of get operations per (local) read-only transaction per class" description="Average number of get operations per (local) read-only transaction per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgRollbackTimeParam" displayName="[ExtendedStatistics] Average Rollback Time per class" description="Average local rollback duration time (2nd phase only) (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgRemotePutsPerWrTransaction" displayName="[ExtendedStatistics] Average number of remote put operations per (local) read-write transaction" description="Average number of remote put operations per (local) read-write transaction">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getNumberOfCommitsParam" displayName="[ExtendedStatistics] Number Of Commits per class" description="Number of committed transactions since last reset per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgNumNodesCommitParam" displayName="[ExtendedStatistics] Average Number of Nodes in Commit Destination Set per class" description="Average number of nodes in Commit destination set per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgPrepareRttParam" displayName="[ExtendedStatistics] Average Prepare RTT per class" description="Average Prepare Round-Trip Time duration (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgLocalRollbackTimeParam" displayName="[ExtendedStatistics] Average Local Rollback Execution Time per class" description="Average time it takes to execute the rollback command locally (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getLockContentionProbabilityParam" displayName="[ExtendedStatistics] Lock Contention Probability per class" description="Lock Contention Probability per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgGetsPerROTransaction" displayName="[ExtendedStatistics] Average number of get operations per (local) read-only transaction" description="Average number of get operations per (local) read-only transaction">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getPercentileLocalReadOnlyTransactionParam" displayName="[ExtendedStatistics] K-th Percentile Local Read-Only Transactions per class" description="K-th percentile of local read-only transactions execution time per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+                 <c:simple-property name="p1" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgPutsPerWrTransaction" displayName="[ExtendedStatistics] Average number of put operations per (local) read-write transaction" description="Average number of put operations per (local) read-write transaction">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgRemotePrepareTimeParam" displayName="[ExtendedStatistics] Average Remote Prepare Execution Time per class" description="Average time it takes to execute the prepare command remotely (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgRollbackRttParam" displayName="[ExtendedStatistics] Average Rollback RTT per class" description="Average Rollback Round-Trip Time duration (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getThroughputParam" displayName="[ExtendedStatistics] Throughput per class" description="Throughput (in transactions per second) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgRemoteGetsPerWrTransaction" displayName="[ExtendedStatistics] Average number of remote get operations per (local) read-write transaction" description="Average number of remote get operations per (local) read-write transaction">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getWriteSkewProbabilityParam" displayName="[ExtendedStatistics] Write Skew Probability per class" description="Write skew probability per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgCommitAsyncParam" displayName="[ExtendedStatistics] Average Commit Async per class" description="Average asynchronous Commit duration (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgRemoteGetsPerROTransactionParam" displayName="[ExtendedStatistics] Average number of remote get operations per (local) read-only transaction per class" description="Average number of remote get operations per (local) read-only transaction per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAbortRateParam" displayName="[ExtendedStatistics] Abort Rate per class" description="Abort Rate per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getRemoteContentionProbabilityParam" displayName="[ExtendedStatistics] Remote Conflict Probability per class" description="Remote Contention Probability per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgPutsPerWrTransactionParam" displayName="[ExtendedStatistics] Average number of put operations per (local) read-write transaction per class" description="Average number of put operations per (local) read-write transaction per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgRemoteGetsPerROTransaction" displayName="[ExtendedStatistics] Average number of remote get operations per (local) read-only transaction" description="Average number of remote get operations per (local) read-only transaction">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgReadOnlyTxDurationParam" displayName="[ExtendedStatistics] Average Read-Only Transaction Duration per class" description="Average successful read-only transaction duration (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getNumberOfCommits" displayName="[ExtendedStatistics] Number Of Commits" description="Number of committed transactions since last reset">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getPercentileRemoteReadOnlyTransactionParam" displayName="[ExtendedStatistics] K-th Percentile Remote Read-Only Transactions per class" description="K-th percentile of remote read-only transactions execution time per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+                 <c:simple-property name="p1" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getApplicationContentionFactorParam" displayName="[ExtendedStatistics] Application Contention Factor per class" description="Application Contention Factor per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgRemoteLockHoldTimeParam" displayName="[ExtendedStatistics] Average Lock Remote Holding Time per class" description="Average lock remote holding time (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getNumberOfRemotePuts" displayName="[ExtendedStatistics] Number of Remote Puts" description="Number of remote puts performed since last reset">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getPercentageWriteTransactionsParam" displayName="[ExtendedStatistics] Percentage of Write Transactions per class" description="Percentage of Write transaction executed locally (committed and aborted) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getNumberOfRemoteGets" displayName="[ExtendedStatistics] Number of Remote Gets" description="Number of remote gets performed since last reset">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgNTCBTimeParam" displayName="[ExtendedStatistics] Average NTCB time per class" description="Average NTCB time (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgNumNodesPrepareParam" displayName="[ExtendedStatistics] Average Number of Nodes in Prepare Destination Set per class" description="Average number of nodes in Prepare destination set per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getRemoteGetExecutionTime" displayName="[ExtendedStatistics] Remote get cost" description="Average cost of a remote get">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgRollbackAsyncParam" displayName="[ExtendedStatistics] Average Rollback Async per class" description="Average asynchronous Rollback duration (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgNumNodesRemoteGetParam" displayName="[ExtendedStatistics] Average Number of Nodes in Remote Get Destination Set per class" description="Average number of nodes in Remote Get destination set per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getNumberOfRemotePutsParam" displayName="[ExtendedStatistics] Number of Remote Puts per class" description="Number of remote puts performed since last reset per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getWriteSkewProbability" displayName="[ExtendedStatistics] Write Skew Probability" description="Write skew probability">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getPercentileLocalReadOnlyTransaction" displayName="[ExtendedStatistics] K-th Percentile Local Read-Only Transactions" description="K-th percentile of local read-only transactions execution time">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgWriteTxDurationParam" displayName="[ExtendedStatistics] Average Write Transaction Duration per class" description="Average successful write transaction duration (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgNumOfLockRemoteTxParam" displayName="[ExtendedStatistics] Average Number of Lock per Remote Transaction per class" description="Average number of locks per write remote transaction per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgCommitTimeParam" displayName="[ExtendedStatistics] Average Commit Time per class" description="Average local commit duration time (2nd phase only) (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getNumAbortedTxDueTimeoutParam" displayName="[ExtendedStatistics] Number of Aborted Transaction due to Lock Acquisition Timeout per class" description="The number of aborted transactions due to timeout in lock acquisition per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgRemotePutsPerWrTransactionParam" displayName="[ExtendedStatistics] Average number of remote put operations per (local) read-write transaction per class" description="Average number of remote put operations per (local) read-write transaction per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getPercentileRemoteWriteTransactionParam" displayName="[ExtendedStatistics] K-th Percentile Remote Write Transactions per class" description="K-th percentile of remote write transactions execution time per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+                 <c:simple-property name="p1" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getNumberOfRemoteGetsParam" displayName="[ExtendedStatistics] Number of Remote Gets per class" description="Number of remote gets performed since last reset per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgGetsPerWrTransactionParam" displayName="[ExtendedStatistics] Average number of get operations per (local) read-write transaction per class" description="Average number of get operations per (local) read-write transaction per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getPercentileLocalRWriteTransactionParam" displayName="[ExtendedStatistics] K-th Percentile Local Write Transactions per class" description="K-th percentile of local write transactions execution time per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+                 <c:simple-property name="p1" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgCommitRttParam" displayName="[ExtendedStatistics] Average Commit RTT per class" description="Average Commit Round-Trip Time duration (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgLocalLockHoldTimeParam" displayName="[ExtendedStatistics] Average Lock Local Holding Time per class" description="Average lock local holding time (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgTCBTimeParam" displayName="[ExtendedStatistics] Average TCB time per class" description="Average TCB time (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getLocalExecutionTimeWithoutLockParam" displayName="[ExtendedStatistics] Local Execution Time Without Locking Time per class" description="Local execution time of a transaction without the time waiting for lock acquisition per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgRemoteTxCompleteNotifyTimeParam" displayName="[ExtendedStatistics] Average Remote Transaction Completion Notify Execution Time per class" description="Average time it takes to execute the rollback command remotely (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getLocalContentionProbabilityParam" displayName="[ExtendedStatistics] Local Conflict Probability per class" description="Local Contention Probability per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgRemoteCommitTimeParam" displayName="[ExtendedStatistics] Average Remote Commit Execution Time per class" description="Average time it takes to execute the commit command remotely (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getNumAbortedTxDueDeadlockParam" displayName="[ExtendedStatistics] Number of Aborted Transaction due to Deadlock per class" description="The number of aborted transactions due to deadlock per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgLocalCommitTimeParam" displayName="[ExtendedStatistics] Average Local Commit Execution Time per class" description="Average time it takes to execute the commit command locally (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.resetStatistics" displayName="[ExtendedStatistics] Reset All Statistics" description="Reset all the statistics collected">
+           </operation>
+           <operation name="ExtendedStatistics.getPercentileRemoteReadOnlyTransaction" displayName="[ExtendedStatistics] K-th Percentile Remote Read-Only Transactions" description="K-th percentile of remote read-only transactions execution time">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getRemotePutExecutionTime" displayName="[ExtendedStatistics] Remote put cost" description="Average cost of a remote put">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgLocalPrepareTimeParam" displayName="[ExtendedStatistics] Average Local Prepare Execution Time per class" description="Average time it takes to execute the prepare command locally (in microseconds) per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="ExtendedStatistics.getAvgNumNodesRollbackParam" displayName="[ExtendedStatistics] Average Number of Nodes in Rollback Destination Set per class" description="Average number of nodes in Rollback destination set per class">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="Transactions.setStatisticsEnabled" displayName="[Transactions] Enable/disable statistics" description="Enable/disable statistics">
+              <parameters>
+                 <c:simple-property name="enabled" description="Whether statistics should be enabled or disabled (true/false)"/>
+              </parameters>
+           </operation>
+           <operation name="Transactions.resetStatistics" displayName="[Transactions] Reset Statistics" description="Resets statistics gathered by this component">
+           </operation>
+           <operation name="CacheLoader.resetStatistics" displayName="[CacheLoader] Reset Statistics" description="Resets statistics gathered by this component">
+           </operation>
+           <operation name="DeadlockDetectingLockManager.resetStatistics" displayName="[DeadlockDetectingLockManager] Reset statistics" description="Resets statistics gathered by this component">
+           </operation>
+           <operation name="CacheStore.resetStatistics" displayName="[CacheStore] Reset statistics" description="Resets statistics gathered by this component">
+           </operation>
+           <operation name="ConditionalExecutorService.setMaximumPoolSize" displayName="[ConditionalExecutorService] Set Maximum Number Of Threads" description="Set the maximum number of threads in the thread pool">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+           </operation>
+           <operation name="ConditionalExecutorService.setKeepAliveTime" displayName="[ConditionalExecutorService] Set Keep Alive Time of Idle Threads" description="Set the idle time of a thread in the thread pool (milliseconds)">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+           </operation>
+           <operation name="ConditionalExecutorService.setCorePoolSize" displayName="[ConditionalExecutorService] Set Minimum Number Of Threads" description="Set the minimum number of threads in the thread pool">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+           </operation>
+           <operation name="Statistics.resetStatistics" displayName="[Statistics] Reset Statistics (Statistics)" description="Resets statistics gathered by this component">
+           </operation>
+           <operation name="Activation.resetStatistics" displayName="[Activation] Reset statistics" description="Resets statistics gathered by this component">
+           </operation>
+           <operation name="StreamLibStatistics.getNTopContendedKeys" displayName="[StreamLibStatistics] Top Contended Keys" description="Show the top n keys most contended">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="StreamLibStatistics.getNRemoteTopPuts" displayName="[StreamLibStatistics] Top Remote Write Keys" description="Show the top n keys most write remotely by this instance">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="StreamLibStatistics.getRemoteTopGets" displayName="[StreamLibStatistics] Top Remote Read Keys" description="Show the top 20000 keys most read remotely by this instance">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="StreamLibStatistics.getTopLockFailedKeys" displayName="[StreamLibStatistics] Top Keys whose Lock Acquisition Failed by Timeout" description="Show the top 20000 keys whose lock acquisition failed by timeout">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="StreamLibStatistics.getNTopLockedKeys" displayName="[StreamLibStatistics] Top Locked Keys" description="Show the top n keys most locked">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="StreamLibStatistics.getLocalTopPuts" displayName="[StreamLibStatistics] Top Local Write Keys" description="Show the top 20000 keys most write locally by this instance">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="StreamLibStatistics.getTopLockedKeys" displayName="[StreamLibStatistics] Top Locked Keys" description="Show the top 20000 keys most locked">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="StreamLibStatistics.getTopWriteSkewFailedKeys" displayName="[StreamLibStatistics] Top Keys whose Write Skew Check was failed" description="Show the top 20000 keys whose write skew check was failed">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="StreamLibStatistics.setTopKValue" displayName="[StreamLibStatistics] Set K" description="Set K for the top-K values">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+           </operation>
+           <operation name="StreamLibStatistics.getNRemoteTopGets" displayName="[StreamLibStatistics] Top Remote Read Keys" description="Show the top n keys most read remotely by this instance">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="StreamLibStatistics.getNLocalTopGets" displayName="[StreamLibStatistics] Top Local Read Keys" description="Show the top n keys most read locally by this instance">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="StreamLibStatistics.setStatisticsEnabled" displayName="[StreamLibStatistics] Top Keys whose Write Skew Check was failed" description="Show the top n keys whose write skew check was failed">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+           </operation>
+           <operation name="StreamLibStatistics.getNTopWriteSkewFailedKeys" displayName="[StreamLibStatistics] Top Keys whose Write Skew Check was failed" description="Show the top n keys whose write skew check was failed">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="StreamLibStatistics.getNLocalTopPuts" displayName="[StreamLibStatistics] Top Local Write Keys" description="Show the top n keys most write locally by this instance">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="StreamLibStatistics.getNTopLockFailedKeys" displayName="[StreamLibStatistics] Top Keys whose Lock Acquisition Failed by Timeout" description="Show the top n keys whose lock acquisition failed ">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="StreamLibStatistics.getLocalTopGets" displayName="[StreamLibStatistics] Top Local Read Keys" description="Show the top 20000 keys most read locally by this instance">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="StreamLibStatistics.resetStatistics" displayName="[StreamLibStatistics] Reset Statistics (Statistics)" description="Resets statistics gathered by this component">
+           </operation>
+           <operation name="StreamLibStatistics.getTopContendedKeys" displayName="[StreamLibStatistics] Top Contended Keys" description="Show the top 20000 keys most contended">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="StreamLibStatistics.getRemoteTopPuts" displayName="[StreamLibStatistics] Top Remote Write Keys" description="Show the top 20000 keys most write remotely by this instance">
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+
+           <metric property="Invalidation.StatisticsEnabled" displayName="[Invalidation] Statistics enabled" displayType="detail" units="none" dataType="trait"
+                   description="Statistics enabled" />
+           <metric property="Invalidation.Invalidations" displayName="[Invalidation] Number of invalidations" displayType="detail" units="none" dataType="measurement"
+                   description="Number of invalidations" />
+           <metric property="Cache.CacheName" displayName="[Cache] Cache name" displayType="summary" units="none" dataType="trait"
+                   description="Returns the cache name" />
+           <metric property="Cache.ConfigurationAsXmlString" displayName="[Cache] Cache configuration (XML)" displayType="summary" units="none" dataType="trait"
+                   description="Returns the cache configuration as XML string" />
+           <metric property="Cache.CacheStatus" displayName="[Cache] Cache status" displayType="summary" units="none" dataType="trait"
+                   description="Returns the cache status" />
+           <metric property="RpcManager.SuccessRatioFloatingPoint" displayName="[RpcManager] Successful replication ratio" displayType="summary" units="percentage" dataType="measurement"
+                   description="Successful replications as a ratio of total replications in numeric double format" />
+           <metric property="RpcManager.ReplicationCount" displayName="[RpcManager] Number of successful replications" displayType="summary" units="none" dataType="measurement"
+                   description="Number of successful replications" />
+           <metric property="RpcManager.StatisticsEnabled" displayName="[RpcManager] Statistics enabled" displayType="detail" units="none" dataType="trait"
+                   description="Statistics enabled" />
+           <metric property="RpcManager.CommittedViewAsString" displayName="[RpcManager] Committed view" displayType="detail" units="none" dataType="trait"
+                   description="Retrieves the committed view." />
+           <metric property="RpcManager.ReplicationFailures" displayName="[RpcManager] Number of failed replications" displayType="summary" units="none" dataType="measurement"
+                   description="Number of failed replications" />
+           <metric property="RpcManager.AverageReplicationTime" displayName="[RpcManager] Average time spent in the transport layer" displayType="summary" units="milliseconds" dataType="measurement"
+                   description="The average time spent in the transport layer, in milliseconds" />
+           <metric property="Passivation.Passivations" displayName="[Passivation] Number of cache passivations" displayType="detail" units="none" dataType="measurement"
+                   description="Number of passivation events" />
+           <metric property="ExtendedStatistics.LocalActiveTransactions" displayName="[ExtendedStatistics] Local Active Transactions" displayType="detail" units="none" dataType="measurement"
+                   description="Number of concurrent transactions executing on the current node" />
+           <metric property="ExtendedStatistics.AvgAbortedWriteTxDuration" displayName="[ExtendedStatistics] Average Aborted Write Transaction Duration" displayType="detail" units="none" dataType="measurement"
+                   description="Average aborted write transaction duration (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgPrepareAsync" displayName="[ExtendedStatistics] Average Prepare Async" displayType="detail" units="none" dataType="measurement"
+                   description="Average asynchronous Prepare duration (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgLocalGetTime" displayName="[ExtendedStatistics] Average Local Get time" displayType="detail" units="none" dataType="measurement"
+                   description="Average Local processing Get time (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgRollbackTime" displayName="[ExtendedStatistics] Average Rollback Time" displayType="detail" units="none" dataType="measurement"
+                   description="Average local rollback duration time (2nd phase only) (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgNumOfLockLocalTx" displayName="[ExtendedStatistics] Average Number of Lock per Local Transaction" displayType="detail" units="none" dataType="measurement"
+                   description="Average number of locks per write local transaction" />
+           <metric property="ExtendedStatistics.AvgPrepareRtt" displayName="[ExtendedStatistics] Average Prepare RTT" displayType="detail" units="none" dataType="measurement"
+                   description="Average Prepare Round-Trip Time duration (in microseconds)" />
+           <metric property="ExtendedStatistics.RemoteContentionProbability" displayName="[ExtendedStatistics] Remote Conflict Probability" displayType="detail" units="none" dataType="measurement"
+                   description="Remote Contention Probability" />
+           <metric property="ExtendedStatistics.AvgRemoteRollbackTime" displayName="[ExtendedStatistics] Average Remote Rollback Execution Time" displayType="detail" units="none" dataType="measurement"
+                   description="Average time it takes to execute the rollback command remotely (in microseconds)" />
+           <metric property="ExtendedStatistics.ReplicationDegree" displayName="[ExtendedStatistics] Replication Degree" displayType="detail" units="none" dataType="measurement"
+                   description="Number of replicas for each key" />
+           <metric property="ExtendedStatistics.LocalContentionProbability" displayName="[ExtendedStatistics] Local Conflict Probability" displayType="detail" units="none" dataType="measurement"
+                   description="Local Contention Probability" />
+           <metric property="ExtendedStatistics.AvgLocalCommitTime" displayName="[ExtendedStatistics] Average Local Commit Execution Time" displayType="detail" units="none" dataType="measurement"
+                   description="Average time it takes to execute the commit command locally (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgCommitRtt" displayName="[ExtendedStatistics] Average Commit RTT" displayType="detail" units="none" dataType="measurement"
+                   description="Average Commit Round-Trip Time duration (in microseconds)" />
+           <metric property="ExtendedStatistics.Throughput" displayName="[ExtendedStatistics] Throughput" displayType="detail" units="none" dataType="measurement"
+                   description="Throughput (in transactions per second)" />
+           <metric property="ExtendedStatistics.AvgRollbackRtt" displayName="[ExtendedStatistics] Average Rollback RTT" displayType="detail" units="none" dataType="measurement"
+                   description="Average Rollback Round-Trip Time duration (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgLocalRollbackTime" displayName="[ExtendedStatistics] Average Local Rollback Execution Time" displayType="detail" units="none" dataType="measurement"
+                   description="Average time it takes to execute the rollback command locally (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgNumNodesCompleteNotification" displayName="[ExtendedStatistics] Average Number of Nodes in Complete Notification Destination Set" displayType="detail" units="none" dataType="measurement"
+                   description="Average number of nodes in Complete Notification destination set" />
+           <metric property="ExtendedStatistics.NumAbortedTxDueTimeout" displayName="[ExtendedStatistics] Number of Aborted Transaction due to Lock Acquisition Timeout" displayType="detail" units="none" dataType="measurement"
+                   description="The number of aborted transactions due to timeout in lock acquisition" />
+           <metric property="ExtendedStatistics.AvgNumPutsBySuccessfulLocalTx" displayName="[ExtendedStatistics] Number of puts" displayType="detail" units="none" dataType="measurement"
+                   description="Average number of puts performed by a successful local transaction" />
+           <metric property="ExtendedStatistics.AvgRemoteTxCompleteNotifyTime" displayName="[ExtendedStatistics] Average Remote Transaction Completion Notify Execution Time" displayType="detail" units="none" dataType="measurement"
+                   description="Average time it takes to execute the rollback command remotely (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgTxArrivalRate" displayName="[ExtendedStatistics] Average Transaction Arrival Rate" displayType="detail" units="none" dataType="measurement"
+                   description="Average transaction arrival rate, originated locally and remotely (in transaction per second)" />
+           <metric property="ExtendedStatistics.NumAbortedTxDueDeadlock" displayName="[ExtendedStatistics] Number of Aborted Transaction due to Deadlock" displayType="detail" units="none" dataType="measurement"
+                   description="The number of aborted transactions due to deadlock" />
+           <metric property="ExtendedStatistics.ApplicationContentionFactor" displayName="[ExtendedStatistics] Application Contention Factor" displayType="detail" units="none" dataType="measurement"
+                   description="Application Contention Factor" />
+           <metric property="ExtendedStatistics.AvgCompleteNotificationAsync" displayName="[ExtendedStatistics] Average Complete Notification Async" displayType="detail" units="none" dataType="measurement"
+                   description="Average asynchronous Complete Notification duration (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgCommitTime" displayName="[ExtendedStatistics] Average Commit Time" displayType="detail" units="none" dataType="measurement"
+                   description="Average local commit duration time (2nd phase only) (in microseconds)" />
+           <metric property="ExtendedStatistics.LocalExecutionTimeWithoutLock" displayName="[ExtendedStatistics] Local Execution Time Without Locking Time" displayType="detail" units="none" dataType="measurement"
+                   description="Local execution time of a transaction without the time waiting for lock acquisition" />
+           <metric property="ExtendedStatistics.AvgTCBTime" displayName="[ExtendedStatistics] Average TCB time" displayType="detail" units="none" dataType="measurement"
+                   description="Average TCB time (in microseconds)" />
+           <metric property="ExtendedStatistics.NumNodes" displayName="[ExtendedStatistics] Number of nodes" displayType="detail" units="none" dataType="measurement"
+                   description="Number of nodes in the cluster" />
+           <metric property="ExtendedStatistics.AvgLocalLockHoldTime" displayName="[ExtendedStatistics] Average Lock Local Holding Time" displayType="detail" units="none" dataType="measurement"
+                   description="Average lock local holding time (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgNumNodesPrepare" displayName="[ExtendedStatistics] Average Number of Nodes in Prepare Destination Set" displayType="detail" units="none" dataType="measurement"
+                   description="Average number of nodes in Prepare destination set" />
+           <metric property="ExtendedStatistics.AvgRemoteCommitTime" displayName="[ExtendedStatistics] Average Remote Commit Execution Time" displayType="detail" units="none" dataType="measurement"
+                   description="Average time it takes to execute the commit command remotely (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgClusteredGetCommandSize" displayName="[ExtendedStatistics] Average Clustered Get Command Size" displayType="detail" units="none" dataType="measurement"
+                   description="Average clustered get command size (in bytes)" />
+           <metric property="ExtendedStatistics.AvgPrepareCommandSize" displayName="[ExtendedStatistics] Average Prepare Command Size" displayType="detail" units="none" dataType="measurement"
+                   description="Average prepare command size (in bytes)" />
+           <metric property="ExtendedStatistics.LockContentionProbability" displayName="[ExtendedStatistics] Lock Contention Probability" displayType="detail" units="none" dataType="measurement"
+                   description="Lock Contention Probability" />
+           <metric property="ExtendedStatistics.AvgRollbackAsync" displayName="[ExtendedStatistics] Average Rollback Async" displayType="detail" units="none" dataType="measurement"
+                   description="Average asynchronous Rollback duration (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgWriteTxLocalExecution" displayName="[ExtendedStatistics] Average Write Transaction Local Execution Time" displayType="detail" units="none" dataType="measurement"
+                   description="Average write transaction local execution time (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgNumOfLockRemoteTx" displayName="[ExtendedStatistics] Average Number of Lock per Remote Transaction" displayType="detail" units="none" dataType="measurement"
+                   description="Average number of locks per write remote transaction" />
+           <metric property="ExtendedStatistics.AvgRemoteGetRtt" displayName="[ExtendedStatistics] Average Remote Get RTT" displayType="detail" units="none" dataType="measurement"
+                   description="Average Remote Get Round-Trip Time duration (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgWriteTxDuration" displayName="[ExtendedStatistics] Average Write Transaction Duration" displayType="detail" units="none" dataType="measurement"
+                   description="Average successful write transaction duration (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgResponseTime" displayName="[ExtendedStatistics] Average Response Time" displayType="detail" units="none" dataType="measurement"
+                   description="Average Response Time" />
+           <metric property="ExtendedStatistics.AvgNumNodesRollback" displayName="[ExtendedStatistics] Average Number of Nodes in Rollback Destination Set" displayType="detail" units="none" dataType="measurement"
+                   description="Average number of nodes in Rollback destination set" />
+           <metric property="ExtendedStatistics.AvgLockHoldTime" displayName="[ExtendedStatistics] Average Lock Holding Time" displayType="detail" units="none" dataType="measurement"
+                   description="Average lock holding time (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgNumOfLockSuccessLocalTx" displayName="[ExtendedStatistics] Average Number of Lock per Successfully Local Transaction" displayType="detail" units="none" dataType="measurement"
+                   description="Average number of locks per successfully write local transaction" />
+           <metric property="ExtendedStatistics.AvgCommitCommandSize" displayName="[ExtendedStatistics] Average Commit Command Size" displayType="detail" units="none" dataType="measurement"
+                   description="Average commit command size (in bytes)" />
+           <metric property="ExtendedStatistics.AvgNumNodesCommit" displayName="[ExtendedStatistics] Average Number of Nodes in Commit Destination Set" displayType="detail" units="none" dataType="measurement"
+                   description="Average number of nodes in Commit destination set" />
+           <metric property="ExtendedStatistics.AbortRate" displayName="[ExtendedStatistics] Abort Rate" displayType="detail" units="none" dataType="measurement"
+                   description="Abort Rate" />
+           <metric property="ExtendedStatistics.AvgLocalPrepareTime" displayName="[ExtendedStatistics] Average Local Prepare Execution Time" displayType="detail" units="none" dataType="measurement"
+                   description="Average time it takes to execute the prepare command locally (in microseconds)" />
+           <metric property="ExtendedStatistics.PercentageWriteTransactions" displayName="[ExtendedStatistics] Percentage of Write Transactions" displayType="detail" units="none" dataType="measurement"
+                   description="Percentage of Write transaction executed locally (committed and aborted)" />
+           <metric property="ExtendedStatistics.AvgRemotePrepareTime" displayName="[ExtendedStatistics] Average Remote Prepare Execution Time" displayType="detail" units="none" dataType="measurement"
+                   description="Average time it takes to execute the prepare command remotely (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgLockWaitingTime" displayName="[ExtendedStatistics] Average Lock Waiting Time" displayType="detail" units="none" dataType="measurement"
+                   description="Average time waiting for the lock acquisition (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgReadOnlyTxDuration" displayName="[ExtendedStatistics] Average Read-Only Transaction Duration" displayType="detail" units="none" dataType="measurement"
+                   description="Average successful read-only transaction duration (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgCommitAsync" displayName="[ExtendedStatistics] Average Commit Async" displayType="detail" units="none" dataType="measurement"
+                   description="Average asynchronous Commit duration (in microseconds)" />
+           <metric property="ExtendedStatistics.PercentageSuccessWriteTransactions" displayName="[ExtendedStatistics] Percentage of Successfully Write Transactions" displayType="detail" units="none" dataType="measurement"
+                   description="Percentage of Write transaction executed in all successfully executed transactions (local transaction only)" />
+           <metric property="ExtendedStatistics.AvgNumNodesRemoteGet" displayName="[ExtendedStatistics] Average Number of Nodes in Remote Get Destination Set" displayType="detail" units="none" dataType="measurement"
+                   description="Average number of nodes in Remote Get destination set" />
+           <metric property="ExtendedStatistics.AvgNTCBTime" displayName="[ExtendedStatistics] Average NTCB time" displayType="detail" units="none" dataType="measurement"
+                   description="Average NTCB time (in microseconds)" />
+           <metric property="ExtendedStatistics.AvgRemoteLockHoldTime" displayName="[ExtendedStatistics] Average Lock Remote Holding Time" displayType="detail" units="none" dataType="measurement"
+                   description="Average lock remote holding time (in microseconds)" />
+           <metric property="Transactions.LocalRollbacks" displayName="[Transactions] LocalRollbacks" displayType="summary" units="none" dataType="measurement"
+                   description="Number of local originated transaction rollbacks performed since last reset" />
+           <metric property="Transactions.Prepares" displayName="[Transactions] Prepares" displayType="summary" units="none" dataType="measurement"
+                   description="Number of transaction prepares performed since last reset" />
+           <metric property="Transactions.AvgSuccessfulTxCommit" displayName="[Transactions] AvgSuccessfulTxCommit" displayType="summary" units="milliseconds" dataType="measurement"
+                   description="Average confirm phase latency of successful committed transactions" />
+           <metric property="Transactions.AvgFailedTxCommit" displayName="[Transactions] AvgFailedTxCommit" displayType="summary" units="milliseconds" dataType="measurement"
+                   description="Average confirm phase latency of failed committed transactions" />
+           <metric property="Transactions.LocalCommits" displayName="[Transactions] LocalCommits" displayType="summary" units="none" dataType="measurement"
+                   description="Number of local originated transaction commits performed since last reset" />
+           <metric property="Transactions.Rollbacks" displayName="[Transactions] Rollbacks" displayType="summary" units="none" dataType="measurement"
+                   description="Number of transaction rollbacks performed since last reset" />
+           <metric property="Transactions.SuccessfulCommits" displayName="[Transactions] SuccessfulCommits" displayType="summary" units="none" dataType="measurement"
+                   description="Number of local successful committed transaction since last reset" />
+           <metric property="Transactions.Commits" displayName="[Transactions] Commits" displayType="summary" units="none" dataType="measurement"
+                   description="Number of transaction commits performed since last reset" />
+           <metric property="Transactions.StatisticsEnabled" displayName="[Transactions] Statistics enabled" displayType="detail" units="none" dataType="trait"
+                   description="Statistics enabled" />
+           <metric property="Transactions.FailedCommits" displayName="[Transactions] FailedCommits" displayType="summary" units="none" dataType="measurement"
+                   description="Number of local failed committed transaction since last reset" />
+           <metric property="Transactions.LocalPrepares" displayName="[Transactions] LocalPrepares" displayType="summary" units="none" dataType="measurement"
+                   description="Number of local originated transaction prepares performed since last reset" />
+           <metric property="CacheLoader.CacheLoaderLoads" displayName="[CacheLoader] Number of cache store loads" displayType="detail" units="none" dataType="measurement"
+                   description="Number of entries loaded from cache store" />
+           <metric property="CacheLoader.CacheLoaderMisses" displayName="[CacheLoader] Number of cache store load misses" displayType="detail" units="none" dataType="measurement"
+                   description="Number of entries that did not exist in cache store" />
+           <metric property="DeadlockDetectingLockManager.NumberOfLocksAvailable" displayName="[DeadlockDetectingLockManager] Number of locks available" displayType="detail" units="none" dataType="measurement"
+                   description="The number of exclusive locks that are available." />
+           <metric property="DeadlockDetectingLockManager.OverlapWithNotDeadlockAwareLockOwners" displayName="[DeadlockDetectingLockManager] Number of unsolvable deadlock situations" displayType="detail" units="none" dataType="measurement"
+                   description="Number of situations when we try to determine a deadlock and the other lock owner is NOT a transaction. In this scenario we cannot run the deadlock detection mechanism" />
+           <metric property="DeadlockDetectingLockManager.DetectedLocalDeadlocks" displayName="[DeadlockDetectingLockManager] Number of local transaction that were roll backed due to deadlocks" displayType="detail" units="none" dataType="measurement"
+                   description="Number of local transaction that were roll backed due to deadlocks" />
+           <metric property="DeadlockDetectingLockManager.LocallyInterruptedTransactions" displayName="[DeadlockDetectingLockManager] Number of interrupted local transactions" displayType="detail" units="none" dataType="measurement"
+                   description="Number of locally originated transactions that were interrupted as a deadlock situation was detected" />
+           <metric property="DeadlockDetectingLockManager.NumberOfLocksHeld" displayName="[DeadlockDetectingLockManager] Number of locks held" displayType="detail" units="none" dataType="measurement"
+                   description="The number of exclusive locks that are held." />
+           <metric property="DeadlockDetectingLockManager.ConcurrencyLevel" displayName="[DeadlockDetectingLockManager] Concurrency level" displayType="detail" units="none" dataType="trait"
+                   description="The concurrency level that the MVCC Lock Manager has been configured with." />
+           <metric property="DeadlockDetectingLockManager.TotalNumberOfDetectedDeadlocks" displayName="[DeadlockDetectingLockManager] Number of total detected deadlocks" displayType="detail" units="none" dataType="measurement"
+                   description="Total number of local detected deadlocks" />
+           <metric property="DeadlockDetectingLockManager.DetectedRemoteDeadlocks" displayName="[DeadlockDetectingLockManager] Number of remote transaction that were roll backed due to deadlocks" displayType="detail" units="none" dataType="measurement"
+                   description="Number of remote transaction that were roll backed due to deadlocks" />
+           <metric property="CacheStore.CacheLoaderStores" displayName="[CacheStore] Number of cache stores" displayType="detail" units="none" dataType="measurement"
+                   description="number of cache loader stores" />
+           <metric property="ConditionalExecutorService.KeepAliveTime" displayName="[ConditionalExecutorService] Keep Alive Time of a Idle Thread" displayType="detail" units="milliseconds" dataType="measurement"
+                   description="The keep alive time of an idle thread in the thread pool (milliseconds)" />
+           <metric property="ConditionalExecutorService.UsagePercentage" displayName="[ConditionalExecutorService] Percentage of Active Threads" displayType="summary" units="percentage" dataType="measurement"
+                   description="The approximate percentage of active threads in the thread pool" />
+           <metric property="ConditionalExecutorService.MaximumPoolSize" displayName="[ConditionalExecutorService] Maximum Number of Threads" displayType="detail" units="none" dataType="measurement"
+                   description="The maximum number of threads in the thread pool" />
+           <metric property="ConditionalExecutorService.CorePoolSize" displayName="[ConditionalExecutorService] Minimum Number of Threads" displayType="detail" units="none" dataType="measurement"
+                   description="The minimum number of threads in the thread pool" />
+           <metric property="SequentialTotalOrderManager.AverageValidationDuration" displayName="[SequentialTotalOrderManager] Average Validation Duration" displayType="summary" units="milliseconds" dataType="measurement"
+                   description="Average duration of a transaction validation (milliseconds)" />
+           <metric property="ParallelTotalOrderManager.AverageWaitingTimeInQueue" displayName="[ParallelTotalOrderManager] Average Waiting Duration In Queue" displayType="summary" units="milliseconds" dataType="measurement"
+                   description="Average time in the queue before the validation (milliseconds)" />
+           <metric property="ParallelTotalOrderManager.AverageValidationDuration" displayName="[ParallelTotalOrderManager] Average Validation Duration" displayType="summary" units="milliseconds" dataType="measurement"
+                   description="Average duration of a transaction validation (milliseconds)" />
+           <metric property="ParallelTotalOrderManager.AverageInitializationDuration" displayName="[ParallelTotalOrderManager] Average Initialization Duration" displayType="summary" units="milliseconds" dataType="measurement"
+                   description="Average duration of a transaction initialization before validation, ie, ensuring the order of transactions (milliseconds)" />
+           <metric property="Statistics.AverageReadTime" displayName="[Statistics] Average read time" displayType="summary" units="milliseconds" dataType="measurement"
+                   description="Average number of milliseconds for a read operation on the cache" />
+           <metric property="Statistics.HitRatio" displayName="[Statistics] Hit ratio" displayType="summary" units="percentage" dataType="measurement"
+                   description="Percentage hit/(hit+miss) ratio for the cache" />
+           <metric property="Statistics.ElapsedTime" displayName="[Statistics] Seconds since cache started" displayType="summary" units="seconds" dataType="measurement"
+                   description="Number of seconds since cache started" />
+           <metric property="Statistics.ReadWriteRatio" displayName="[Statistics] Read/write ratio" displayType="summary" units="percentage" dataType="measurement"
+                   description="read/writes ratio for the cache" />
+           <metric property="Statistics.AverageWriteTime" displayName="[Statistics] Average write time" displayType="summary" units="milliseconds" dataType="measurement"
+                   description="Average number of milliseconds for a write operation in the cache" />
+           <metric property="Statistics.Hits" displayName="[Statistics] Number of cache hits" displayType="summary" units="none" dataType="measurement"
+                   description="Number of cache attribute hits" />
+           <metric property="Statistics.Evictions" displayName="[Statistics] Number of cache evictions" displayType="summary" units="none" dataType="measurement"
+                   description="Number of cache eviction operations" />
+           <metric property="Statistics.RemoveMisses" displayName="[Statistics] Number of cache removal misses" displayType="summary" units="none" dataType="measurement"
+                   description="Number of cache removals where keys were not found" />
+           <metric property="Statistics.TimeSinceReset" displayName="[Statistics] Seconds since cache statistics were reset" displayType="summary" units="seconds" dataType="measurement"
+                   description="Number of seconds since the cache statistics were last reset" />
+           <metric property="Statistics.NumberOfEntries" displayName="[Statistics] Number of current cache entries" displayType="summary" units="none" dataType="measurement"
+                   description="Number of entries currently in the cache" />
+           <metric property="Statistics.Stores" displayName="[Statistics] Number of cache puts" displayType="summary" units="none" dataType="measurement"
+                   description="number of cache attribute put operations" />
+           <metric property="Statistics.RemoveHits" displayName="[Statistics] Number of cache removal hits" displayType="summary" units="none" dataType="measurement"
+                   description="Number of cache removal hits" />
+           <metric property="Statistics.Misses" displayName="[Statistics] Number of cache misses" displayType="summary" units="none" dataType="measurement"
+                   description="Number of cache attribute misses" />
+           <metric property="Activation.CacheLoaderLoads" displayName="[Activation] Number of cache store loads" displayType="detail" units="none" dataType="measurement"
+                   description="Number of entries loaded from cache store" />
+           <metric property="Activation.CacheLoaderMisses" displayName="[Activation] Number of cache store load misses" displayType="detail" units="none" dataType="measurement"
+                   description="Number of entries that did not exist in cache store" />
+           <metric property="Activation.Activations" displayName="[Activation] Number of cache entries activated" displayType="detail" units="none" dataType="measurement"
+                   description="Number of activation events" />
+           <metric property="LockManager.NumberOfLocksAvailable" displayName="[LockManager] Number of locks available" displayType="detail" units="none" dataType="measurement"
+                   description="The number of exclusive locks that are available." />
+           <metric property="LockManager.NumberOfLocksHeld" displayName="[LockManager] Number of locks held" displayType="detail" units="none" dataType="measurement"
+                   description="The number of exclusive locks that are held." />
+           <metric property="LockManager.ConcurrencyLevel" displayName="[LockManager] Concurrency level" displayType="detail" units="none" dataType="trait"
+                   description="The concurrency level that the MVCC Lock Manager has been configured with." />
+
+
+       </service>
+   </service>
+
+</plugin>
