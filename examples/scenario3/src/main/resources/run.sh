@@ -11,6 +11,7 @@ JVM_OPTIONS="-Xmx1G"
 HOSTNAME=`hostname -s`
 D_VARS="-Djava.net.preferIPv4Stack=true"
 D_VARS="${D_VARS} -Djgroups.bind_addr=${HOSTNAME}"
+FF_VARS="-Dfenixframework.expectedInitialNodes=$1"
 
 #set the class path
 CP=${WORKING_DIR};
@@ -19,7 +20,7 @@ do
 CP="${CP}:${jar}";
 done
 
-CMD="java ${JVM_OPTIONS} ${D_VARS} -cp ${CP} ${MAIN_CLASS} ${HOSTNAME} $1"
+CMD="java ${JVM_OPTIONS} ${D_VARS} ${FF_VARS} -cp ${CP} ${MAIN_CLASS} ${HOSTNAME} $1"
 
 echo $CMD
 eval $CMD

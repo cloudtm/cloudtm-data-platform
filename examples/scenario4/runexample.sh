@@ -42,11 +42,11 @@ GOSSIP_ROUTER_PID=$!
 sleep 10
 
 #start node A
-MAVEN_OPTS="-Xmx1G -Djava.net.preferIPv4Stack=true -Djgroups.bind_addr=${HOSTNAME}" mvn exec:java -Dfenixframework.code.generator=$BACKEND -DskipTests -Dexec.mainClass="test.MainApp" -Dexec.args="node_a 2" $ARGS &
+MAVEN_OPTS="-Xmx1G -Djava.net.preferIPv4Stack=true -Djgroups.bind_addr=${HOSTNAME}" mvn exec:java -Dcode.generator=$BACKEND -DskipTests -Dexec.mainClass="test.MainApp" -Dexec.args="node_a 2" $ARGS &
 PID=$!
 
 #start node B
-MAVEN_OPTS="-Xmx1G -Djava.net.preferIPv4Stack=true -Djgroups.bind_addr=${HOSTNAME}" mvn exec:java -Dfenixframework.code.generator=$BACKEND -DskipTests -Dexec.mainClass="test.MainApp" -Dexec.args="node_b 2" $ARGS
+MAVEN_OPTS="-Xmx1G -Djava.net.preferIPv4Stack=true -Djgroups.bind_addr=${HOSTNAME}" mvn exec:java -Dcode.generator=$BACKEND -DskipTests -Dexec.mainClass="test.MainApp" -Dexec.args="node_b 2" $ARGS
 wait $PID
 #kill Gossip Router
 kill ${GOSSIP_ROUTER_PID}

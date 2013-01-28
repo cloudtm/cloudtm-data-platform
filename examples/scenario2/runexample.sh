@@ -23,5 +23,5 @@ while [ -n "$1" ]; do
 done
 
 cd ${WORKING_DIR}
-MAVEN_OPTS="-Xmx1G" mvn clean package exec:java -Dfenixframework.code.generator=$BACKEND -DskipTests -Dexec.mainClass="test.MainApp" $ARGS
+MAVEN_OPTS="-Xmx1G" mvn clean package exec:java -Dcode.generator=$BACKEND -DskipTests -Dexec.mainClass="test.MainApp" $ARGS
 exit 0

@@ -10,7 +10,7 @@
     <name>Scenario 4</name>
 
     <properties>
-        <fenixframework.code.generator>pt.ist.fenixframework.backend.infinispan.InfinispanCodeGenerator</fenixframework.code.generator>
+        <code.generator>pt.ist.fenixframework.backend.infinispan.InfinispanCodeGenerator</code.generator>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <version.fenix.framework>2.1-cloudtm-SNAPSHOT</version.fenix.framework>
@@ -47,7 +47,7 @@
                 <artifactId>dml-maven-plugin</artifactId>
                 <version>${version.fenix.framework}</version>
                 <configuration>
-                    <codeGeneratorClassName>${fenixframework.code.generator}</codeGeneratorClassName>
+                    <codeGeneratorClassName>${code.generator}</codeGeneratorClassName>
                     <params>
                         <ptIstTxIntrospectorEnable>true</ptIstTxIntrospectorEnable>
                     </params>
