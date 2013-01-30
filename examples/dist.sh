@@ -10,6 +10,6 @@ do
 cd $i;
 echo "Processing $i"
 mvn clean package && cp target/${i}*.zip ../bin/${i}-ispn.zip;
-mvn clean package -Dfenixframework.code.generator=pt.ist.fenixframework.backend.ogm.OgmCodeGenerator && cp target/${i}*.zip ../bin/${i}-ogm.zip;
+mvn clean package -Dcode.generator=pt.ist.fenixframework.backend.ogm.OgmCodeGenerator && cp target/${i}*.zip ../bin/${i}-ogm.zip;
 cd -;
 done;
