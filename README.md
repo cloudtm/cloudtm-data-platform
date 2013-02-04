@@ -1,6 +1,6 @@
 <a href="http://www.cloudtm.eu"><img src="images/logo.png" alt="Cloud-TM project" height="315" width="495"></a>
 
-== Cloud-TM Data Platform
+== Cloud-TM
 
 
 This GitHub repository contains the source code, binaries and example applications associated with the Cloud-TM Data Platform.
