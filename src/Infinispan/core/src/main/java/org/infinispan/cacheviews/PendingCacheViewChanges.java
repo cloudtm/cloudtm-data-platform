@@ -56,6 +56,7 @@ public class PendingCacheViewChanges {
    private Set<Address> recoveredMembers;
    //The flag to move keys
    private boolean shouldMoveKey = false;
+   private int pendingReplicationDegree = NO_REPLICATION_DEGREE_CHANGE;
    private int replicationDegree = NO_REPLICATION_DEGREE_CHANGE;
 
    private boolean viewInstallationInProgress;
@@ -74,7 +75,7 @@ public class PendingCacheViewChanges {
    public CacheView createPendingView(CacheView committedView) {
       synchronized (lock) {
          // TODO Enforce view installation policy here?
-         if(!shouldMoveKey && replicationDegree == NO_REPLICATION_DEGREE_CHANGE){
+         if(!shouldMoveKey && pendingReplicationDegree == NO_REPLICATION_DEGREE_CHANGE){
             if (viewInstallationInProgress) {
                log.tracef("Cannot create a new view, there is another view installation in progress");
                return null;
@@ -82,8 +83,12 @@ public class PendingCacheViewChanges {
             if (leavers.size() == 0 && joiners.size() == 0 && recoveredMembers == null) {
                log.tracef("Cannot create a new view, we have no joiners or leavers");
                return null;
-            }
+            }            
          }
+
+         shouldMoveKey = false;
+         replicationDegree = pendingReplicationDegree;
+         pendingReplicationDegree = NO_REPLICATION_DEGREE_CHANGE;
 
          Collection<Address> baseMembers = recoveredMembers != null ? recoveredMembers : committedView.getMembers();
          log.tracef("Previous members are %s, joiners are %s, leavers are %s, recovered after merge = %s",
@@ -137,6 +142,7 @@ public class PendingCacheViewChanges {
 
          shouldMoveKey = false;
          log.tracef("Should move key set to false");
+         pendingReplicationDegree = NO_REPLICATION_DEGREE_CHANGE;
          replicationDegree = NO_REPLICATION_DEGREE_CHANGE;
 
          viewInstallationInProgress = false;
@@ -250,7 +256,7 @@ public class PendingCacheViewChanges {
    }
 
    public final void requestNewReplicationDegree(int replicationDegree) {
-      this.replicationDegree = replicationDegree;
+      this.pendingReplicationDegree = replicationDegree;
    }
 
    public final int getReplicationDegree() {

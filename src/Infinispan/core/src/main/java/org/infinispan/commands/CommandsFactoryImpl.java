@@ -445,6 +445,7 @@ public class CommandsFactoryImpl implements CommandsFactory {
          case DataPlacementCommand.COMMAND_ID:
             DataPlacementCommand dataPlacementRequestCommand = (DataPlacementCommand)c;
             dataPlacementRequestCommand.initialize(dataPlacementManager);
+            break;
          case ReconfigurableProtocolCommand.COMMAND_ID:
             ReconfigurableProtocolCommand rpc = (ReconfigurableProtocolCommand) c;
             rpc.init(reconfigurableReplicationManager);
@@ -456,6 +457,7 @@ public class CommandsFactoryImpl implements CommandsFactory {
          case ConfigurationStateCommand.COMMAND_ID:
             ConfigurationStateCommand csc = (ConfigurationStateCommand) c;
             csc.initialize(distributionManager, reconfigurableReplicationManager);
+            break;
          default:
             ModuleCommandInitializer mci = moduleCommandInitializers.get(c.getCommandId());
             if (mci != null) {

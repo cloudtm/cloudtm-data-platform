@@ -18,10 +18,10 @@
           >
 
             <runs-inside>
-                <parent-resource-type name="JBossAS Server" plugin="JBossAS5"/>
                 <parent-resource-type name="Profile" plugin="jboss-as-7"/>
-                <parent-resource-type name="JBossAS7 Standalone Server" plugin="jboss-as-7"/>
                 <parent-resource-type name="JBossAS Server" plugin="JBossAS"/>
+                <parent-resource-type name="JBossAS7 Standalone Server" plugin="jboss-as-7"/>
+                <parent-resource-type name="JBossAS Server" plugin="JBossAS5"/>
                 <parent-resource-type name="JMX Server" plugin="JMX"/>
             </runs-inside>
 
@@ -87,47 +87,37 @@
 
 
 
-           <operation name="DistributionManager.locateKey" displayName="[DistributionManager] Locate key" description="Locates an object in a cluster.  Only works with String keys.">
-              <parameters>
-                 <c:simple-property name="key" description="Key to locate"/>
-              </parameters>
-              <results>
-                 <c:simple-property name="operationResult" />
-              </results>
-           </operation>
-           <operation name="DistributionManager.isAffectedByRehash" displayName="[DistributionManager] Could key be affected by rehash?" description="Determines whether a given key is affected by an ongoing rehash, if any.">
-              <parameters>
-                 <c:simple-property name="key" description="Key to check"/>
-              </parameters>
-              <results>
-                 <c:simple-property name="operationResult" />
-              </results>
-           </operation>
-           <operation name="DistributionManager.isLocatedLocally" displayName="[DistributionManager] Is key local?" description="Tells you whether a given key is local to this instance of the cache.  Only works with String keys.">
-              <parameters>
-                 <c:simple-property name="key" description="Key to query"/>
-              </parameters>
-              <results>
-                 <c:simple-property name="operationResult" />
-              </results>
-           </operation>
-           <operation name="Invalidation.setStatisticsEnabled" displayName="[Invalidation] Enable/disable statistics" description="Enable/disable statistics">
+           <operation name="Transactions.setStatisticsEnabled" displayName="[Transactions] Enable/disable statistics" description="Enable/disable statistics">
               <parameters>
                  <c:simple-property name="enabled" description="Whether statistics should be enabled or disabled (true/false)"/>
               </parameters>
            </operation>
-           <operation name="Invalidation.resetStatistics" displayName="[Invalidation] Reset statistics" description="Resets statistics gathered by this component">
+           <operation name="Transactions.resetStatistics" displayName="[Transactions] Reset Statistics" description="Resets statistics gathered by this component">
            </operation>
            <operation name="Cache.stop" displayName="[Cache] Stops cache." description="Stops the cache.">
            </operation>
            <operation name="Cache.start" displayName="[Cache] Starts cache." description="Starts the cache.">
            </operation>
-           <operation name="RpcManager.setStatisticsEnabled" displayName="[RpcManager] Enable/disable statistics" description="Enable/disable statistics">
+           <operation name="Activation.resetStatistics" displayName="[Activation] Reset statistics" description="Resets statistics gathered by this component">
+           </operation>
+           <operation name="CacheStore.resetStatistics" displayName="[CacheStore] Reset statistics" description="Resets statistics gathered by this component">
+           </operation>
+           <operation name="ConditionalExecutorService.setMaximumPoolSize" displayName="[ConditionalExecutorService] Set Maximum Number Of Threads" description="Set the maximum number of threads in the thread pool">
               <parameters>
-                 <c:simple-property name="enabled" description="Whether statistics should be enabled or disabled (true/false)"/>
+                 <c:simple-property name="p0" />
               </parameters>
            </operation>
-           <operation name="RpcManager.resetStatistics" displayName="[RpcManager] Reset statistics" description="Resets statistics gathered by this component">
+           <operation name="ConditionalExecutorService.setKeepAliveTime" displayName="[ConditionalExecutorService] Set Keep Alive Time of Idle Threads" description="Set the idle time of a thread in the thread pool (milliseconds)">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+           </operation>
+           <operation name="ConditionalExecutorService.setCorePoolSize" displayName="[ConditionalExecutorService] Set Minimum Number Of Threads" description="Set the minimum number of threads in the thread pool">
+              <parameters>
+                 <c:simple-property name="p0" />
+              </parameters>
+           </operation>
+           <operation name="DeadlockDetectingLockManager.resetStatistics" displayName="[DeadlockDetectingLockManager] Reset statistics" description="Resets statistics gathered by this component">
            </operation>
            <operation name="GMUDistributionManager.locateKey" displayName="[GMUDistributionManager] Locate key" description="Locates an object in a cluster.  Only works with String keys.">
               <parameters>
@@ -828,37 +818,19 @@
                  <c:simple-property name="operationResult" />
               </results>
            </operation>
-           <operation name="Transactions.setStatisticsEnabled" displayName="[Transactions] Enable/disable statistics" description="Enable/disable statistics">
+           <operation name="RpcManager.setStatisticsEnabled" displayName="[RpcManager] Enable/disable statistics" description="Enable/disable statistics">
               <parameters>
                  <c:simple-property name="enabled" description="Whether statistics should be enabled or disabled (true/false)"/>
               </parameters>
            </operation>
-           <operation name="Transactions.resetStatistics" displayName="[Transactions] Reset Statistics" description="Resets statistics gathered by this component">
+           <operation name="RpcManager.resetStatistics" displayName="[RpcManager] Reset statistics" description="Resets statistics gathered by this component">
            </operation>
-           <operation name="CacheLoader.resetStatistics" displayName="[CacheLoader] Reset Statistics" description="Resets statistics gathered by this component">
-           </operation>
-           <operation name="DeadlockDetectingLockManager.resetStatistics" displayName="[DeadlockDetectingLockManager] Reset statistics" description="Resets statistics gathered by this component">
-           </operation>
-           <operation name="CacheStore.resetStatistics" displayName="[CacheStore] Reset statistics" description="Resets statistics gathered by this component">
-           </operation>
-           <operation name="ConditionalExecutorService.setMaximumPoolSize" displayName="[ConditionalExecutorService] Set Maximum Number Of Threads" description="Set the maximum number of threads in the thread pool">
+           <operation name="Invalidation.setStatisticsEnabled" displayName="[Invalidation] Enable/disable statistics" description="Enable/disable statistics">
               <parameters>
-                 <c:simple-property name="p0" />
+                 <c:simple-property name="enabled" description="Whether statistics should be enabled or disabled (true/false)"/>
               </parameters>
            </operation>
-           <operation name="ConditionalExecutorService.setKeepAliveTime" displayName="[ConditionalExecutorService] Set Keep Alive Time of Idle Threads" description="Set the idle time of a thread in the thread pool (milliseconds)">
-              <parameters>
-                 <c:simple-property name="p0" />
-              </parameters>
-           </operation>
-           <operation name="ConditionalExecutorService.setCorePoolSize" displayName="[ConditionalExecutorService] Set Minimum Number Of Threads" description="Set the minimum number of threads in the thread pool">
-              <parameters>
-                 <c:simple-property name="p0" />
-              </parameters>
-           </operation>
-           <operation name="Statistics.resetStatistics" displayName="[Statistics] Reset Statistics (Statistics)" description="Resets statistics gathered by this component">
-           </operation>
-           <operation name="Activation.resetStatistics" displayName="[Activation] Reset statistics" description="Resets statistics gathered by this component">
+           <operation name="Invalidation.resetStatistics" displayName="[Invalidation] Reset statistics" description="Resets statistics gathered by this component">
            </operation>
            <operation name="StreamLibStatistics.getNTopContendedKeys" displayName="[StreamLibStatistics] Top Contended Keys" description="Show the top n keys most contended">
               <parameters>
@@ -976,29 +948,97 @@
                  <c:simple-property name="operationResult" />
               </results>
            </operation>
+           <operation name="CacheLoader.resetStatistics" displayName="[CacheLoader] Reset Statistics" description="Resets statistics gathered by this component">
+           </operation>
+           <operation name="Statistics.resetStatistics" displayName="[Statistics] Reset Statistics (Statistics)" description="Resets statistics gathered by this component">
+           </operation>
+           <operation name="DistributionManager.locateKey" displayName="[DistributionManager] Locate key" description="Locates an object in a cluster.  Only works with String keys.">
+              <parameters>
+                 <c:simple-property name="key" description="Key to locate"/>
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="DistributionManager.isAffectedByRehash" displayName="[DistributionManager] Could key be affected by rehash?" description="Determines whether a given key is affected by an ongoing rehash, if any.">
+              <parameters>
+                 <c:simple-property name="key" description="Key to check"/>
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
+           <operation name="DistributionManager.isLocatedLocally" displayName="[DistributionManager] Is key local?" description="Tells you whether a given key is local to this instance of the cache.  Only works with String keys.">
+              <parameters>
+                 <c:simple-property name="key" description="Key to query"/>
+              </parameters>
+              <results>
+                 <c:simple-property name="operationResult" />
+              </results>
+           </operation>
 
-           <metric property="Invalidation.StatisticsEnabled" displayName="[Invalidation] Statistics enabled" displayType="detail" units="none" dataType="trait"
+           <metric property="Transactions.LocalRollbacks" displayName="[Transactions] LocalRollbacks" displayType="summary" units="none" dataType="measurement"
+                   description="Number of local originated transaction rollbacks performed since last reset" />
+           <metric property="Transactions.Prepares" displayName="[Transactions] Prepares" displayType="summary" units="none" dataType="measurement"
+                   description="Number of transaction prepares performed since last reset" />
+           <metric property="Transactions.AvgSuccessfulTxCommit" displayName="[Transactions] AvgSuccessfulTxCommit" displayType="summary" units="milliseconds" dataType="measurement"
+                   description="Average confirm phase latency of successful committed transactions" />
+           <metric property="Transactions.AvgFailedTxCommit" displayName="[Transactions] AvgFailedTxCommit" displayType="summary" units="milliseconds" dataType="measurement"
+                   description="Average confirm phase latency of failed committed transactions" />
+           <metric property="Transactions.LocalCommits" displayName="[Transactions] LocalCommits" displayType="summary" units="none" dataType="measurement"
+                   description="Number of local originated transaction commits performed since last reset" />
+           <metric property="Transactions.Rollbacks" displayName="[Transactions] Rollbacks" displayType="summary" units="none" dataType="measurement"
+                   description="Number of transaction rollbacks performed since last reset" />
+           <metric property="Transactions.SuccessfulCommits" displayName="[Transactions] SuccessfulCommits" displayType="summary" units="none" dataType="measurement"
+                   description="Number of local successful committed transaction since last reset" />
+           <metric property="Transactions.Commits" displayName="[Transactions] Commits" displayType="summary" units="none" dataType="measurement"
+                   description="Number of transaction commits performed since last reset" />
+           <metric property="Transactions.StatisticsEnabled" displayName="[Transactions] Statistics enabled" displayType="detail" units="none" dataType="trait"
                    description="Statistics enabled" />
-           <metric property="Invalidation.Invalidations" displayName="[Invalidation] Number of invalidations" displayType="detail" units="none" dataType="measurement"
-                   description="Number of invalidations" />
+           <metric property="Transactions.FailedCommits" displayName="[Transactions] FailedCommits" displayType="summary" units="none" dataType="measurement"
+                   description="Number of local failed committed transaction since last reset" />
+           <metric property="Transactions.LocalPrepares" displayName="[Transactions] LocalPrepares" displayType="summary" units="none" dataType="measurement"
+                   description="Number of local originated transaction prepares performed since last reset" />
            <metric property="Cache.CacheName" displayName="[Cache] Cache name" displayType="summary" units="none" dataType="trait"
                    description="Returns the cache name" />
            <metric property="Cache.ConfigurationAsXmlString" displayName="[Cache] Cache configuration (XML)" displayType="summary" units="none" dataType="trait"
                    description="Returns the cache configuration as XML string" />
            <metric property="Cache.CacheStatus" displayName="[Cache] Cache status" displayType="summary" units="none" dataType="trait"
                    description="Returns the cache status" />
-           <metric property="RpcManager.SuccessRatioFloatingPoint" displayName="[RpcManager] Successful replication ratio" displayType="summary" units="percentage" dataType="measurement"
-                   description="Successful replications as a ratio of total replications in numeric double format" />
-           <metric property="RpcManager.ReplicationCount" displayName="[RpcManager] Number of successful replications" displayType="summary" units="none" dataType="measurement"
-                   description="Number of successful replications" />
-           <metric property="RpcManager.StatisticsEnabled" displayName="[RpcManager] Statistics enabled" displayType="detail" units="none" dataType="trait"
-                   description="Statistics enabled" />
-           <metric property="RpcManager.CommittedViewAsString" displayName="[RpcManager] Committed view" displayType="detail" units="none" dataType="trait"
-                   description="Retrieves the committed view." />
-           <metric property="RpcManager.ReplicationFailures" displayName="[RpcManager] Number of failed replications" displayType="summary" units="none" dataType="measurement"
-                   description="Number of failed replications" />
-           <metric property="RpcManager.AverageReplicationTime" displayName="[RpcManager] Average time spent in the transport layer" displayType="summary" units="milliseconds" dataType="measurement"
-                   description="The average time spent in the transport layer, in milliseconds" />
+           <metric property="Activation.CacheLoaderLoads" displayName="[Activation] Number of cache store loads" displayType="detail" units="none" dataType="measurement"
+                   description="Number of entries loaded from cache store" />
+           <metric property="Activation.CacheLoaderMisses" displayName="[Activation] Number of cache store load misses" displayType="detail" units="none" dataType="measurement"
+                   description="Number of entries that did not exist in cache store" />
+           <metric property="Activation.Activations" displayName="[Activation] Number of cache entries activated" displayType="detail" units="none" dataType="measurement"
+                   description="Number of activation events" />
+           <metric property="CacheStore.CacheLoaderStores" displayName="[CacheStore] Number of cache stores" displayType="detail" units="none" dataType="measurement"
+                   description="number of cache loader stores" />
+           <metric property="SequentialTotalOrderManager.AverageValidationDuration" displayName="[SequentialTotalOrderManager] Average Validation Duration" displayType="summary" units="milliseconds" dataType="measurement"
+                   description="Average duration of a transaction validation (milliseconds)" />
+           <metric property="ConditionalExecutorService.KeepAliveTime" displayName="[ConditionalExecutorService] Keep Alive Time of a Idle Thread" displayType="detail" units="milliseconds" dataType="measurement"
+                   description="The keep alive time of an idle thread in the thread pool (milliseconds)" />
+           <metric property="ConditionalExecutorService.UsagePercentage" displayName="[ConditionalExecutorService] Percentage of Active Threads" displayType="summary" units="percentage" dataType="measurement"
+                   description="The approximate percentage of active threads in the thread pool" />
+           <metric property="ConditionalExecutorService.MaximumPoolSize" displayName="[ConditionalExecutorService] Maximum Number of Threads" displayType="detail" units="none" dataType="measurement"
+                   description="The maximum number of threads in the thread pool" />
+           <metric property="ConditionalExecutorService.CorePoolSize" displayName="[ConditionalExecutorService] Minimum Number of Threads" displayType="detail" units="none" dataType="measurement"
+                   description="The minimum number of threads in the thread pool" />
+           <metric property="DeadlockDetectingLockManager.NumberOfLocksAvailable" displayName="[DeadlockDetectingLockManager] Number of locks available" displayType="detail" units="none" dataType="measurement"
+                   description="The number of exclusive locks that are available." />
+           <metric property="DeadlockDetectingLockManager.OverlapWithNotDeadlockAwareLockOwners" displayName="[DeadlockDetectingLockManager] Number of unsolvable deadlock situations" displayType="detail" units="none" dataType="measurement"
+                   description="Number of situations when we try to determine a deadlock and the other lock owner is NOT a transaction. In this scenario we cannot run the deadlock detection mechanism" />
+           <metric property="DeadlockDetectingLockManager.DetectedLocalDeadlocks" displayName="[DeadlockDetectingLockManager] Number of local transaction that were roll backed due to deadlocks" displayType="detail" units="none" dataType="measurement"
+                   description="Number of local transaction that were roll backed due to deadlocks" />
+           <metric property="DeadlockDetectingLockManager.LocallyInterruptedTransactions" displayName="[DeadlockDetectingLockManager] Number of interrupted local transactions" displayType="detail" units="none" dataType="measurement"
+                   description="Number of locally originated transactions that were interrupted as a deadlock situation was detected" />
+           <metric property="DeadlockDetectingLockManager.NumberOfLocksHeld" displayName="[DeadlockDetectingLockManager] Number of locks held" displayType="detail" units="none" dataType="measurement"
+                   description="The number of exclusive locks that are held." />
+           <metric property="DeadlockDetectingLockManager.ConcurrencyLevel" displayName="[DeadlockDetectingLockManager] Concurrency level" displayType="detail" units="none" dataType="trait"
+                   description="The concurrency level that the MVCC Lock Manager has been configured with." />
+           <metric property="DeadlockDetectingLockManager.TotalNumberOfDetectedDeadlocks" displayName="[DeadlockDetectingLockManager] Number of total detected deadlocks" displayType="detail" units="none" dataType="measurement"
+                   description="Total number of local detected deadlocks" />
+           <metric property="DeadlockDetectingLockManager.DetectedRemoteDeadlocks" displayName="[DeadlockDetectingLockManager] Number of remote transaction that were roll backed due to deadlocks" displayType="detail" units="none" dataType="measurement"
+                   description="Number of remote transaction that were roll backed due to deadlocks" />
            <metric property="Passivation.Passivations" displayName="[Passivation] Number of cache passivations" displayType="detail" units="none" dataType="measurement"
                    description="Number of passivation events" />
            <metric property="ExtendedStatistics.LocalActiveTransactions" displayName="[ExtendedStatistics] Local Active Transactions" displayType="detail" units="none" dataType="measurement"
@@ -1113,60 +1153,32 @@
                    description="Average NTCB time (in microseconds)" />
            <metric property="ExtendedStatistics.AvgRemoteLockHoldTime" displayName="[ExtendedStatistics] Average Lock Remote Holding Time" displayType="detail" units="none" dataType="measurement"
                    description="Average lock remote holding time (in microseconds)" />
-           <metric property="Transactions.LocalRollbacks" displayName="[Transactions] LocalRollbacks" displayType="summary" units="none" dataType="measurement"
-                   description="Number of local originated transaction rollbacks performed since last reset" />
-           <metric property="Transactions.Prepares" displayName="[Transactions] Prepares" displayType="summary" units="none" dataType="measurement"
-                   description="Number of transaction prepares performed since last reset" />
-           <metric property="Transactions.AvgSuccessfulTxCommit" displayName="[Transactions] AvgSuccessfulTxCommit" displayType="summary" units="milliseconds" dataType="measurement"
-                   description="Average confirm phase latency of successful committed transactions" />
-           <metric property="Transactions.AvgFailedTxCommit" displayName="[Transactions] AvgFailedTxCommit" displayType="summary" units="milliseconds" dataType="measurement"
-                   description="Average confirm phase latency of failed committed transactions" />
-           <metric property="Transactions.LocalCommits" displayName="[Transactions] LocalCommits" displayType="summary" units="none" dataType="measurement"
-                   description="Number of local originated transaction commits performed since last reset" />
-           <metric property="Transactions.Rollbacks" displayName="[Transactions] Rollbacks" displayType="summary" units="none" dataType="measurement"
-                   description="Number of transaction rollbacks performed since last reset" />
-           <metric property="Transactions.SuccessfulCommits" displayName="[Transactions] SuccessfulCommits" displayType="summary" units="none" dataType="measurement"
-                   description="Number of local successful committed transaction since last reset" />
-           <metric property="Transactions.Commits" displayName="[Transactions] Commits" displayType="summary" units="none" dataType="measurement"
-                   description="Number of transaction commits performed since last reset" />
-           <metric property="Transactions.StatisticsEnabled" displayName="[Transactions] Statistics enabled" displayType="detail" units="none" dataType="trait"
+           <metric property="RpcManager.SuccessRatioFloatingPoint" displayName="[RpcManager] Successful replication ratio" displayType="summary" units="percentage" dataType="measurement"
+                   description="Successful replications as a ratio of total replications in numeric double format" />
+           <metric property="RpcManager.ReplicationCount" displayName="[RpcManager] Number of successful replications" displayType="summary" units="none" dataType="measurement"
+                   description="Number of successful replications" />
+           <metric property="RpcManager.StatisticsEnabled" displayName="[RpcManager] Statistics enabled" displayType="detail" units="none" dataType="trait"
                    description="Statistics enabled" />
-           <metric property="Transactions.FailedCommits" displayName="[Transactions] FailedCommits" displayType="summary" units="none" dataType="measurement"
-                   description="Number of local failed committed transaction since last reset" />
-           <metric property="Transactions.LocalPrepares" displayName="[Transactions] LocalPrepares" displayType="summary" units="none" dataType="measurement"
-                   description="Number of local originated transaction prepares performed since last reset" />
+           <metric property="RpcManager.CommittedViewAsString" displayName="[RpcManager] Committed view" displayType="detail" units="none" dataType="trait"
+                   description="Retrieves the committed view." />
+           <metric property="RpcManager.ReplicationFailures" displayName="[RpcManager] Number of failed replications" displayType="summary" units="none" dataType="measurement"
+                   description="Number of failed replications" />
+           <metric property="RpcManager.AverageReplicationTime" displayName="[RpcManager] Average time spent in the transport layer" displayType="summary" units="milliseconds" dataType="measurement"
+                   description="The average time spent in the transport layer, in milliseconds" />
+           <metric property="Invalidation.StatisticsEnabled" displayName="[Invalidation] Statistics enabled" displayType="detail" units="none" dataType="trait"
+                   description="Statistics enabled" />
+           <metric property="Invalidation.Invalidations" displayName="[Invalidation] Number of invalidations" displayType="detail" units="none" dataType="measurement"
+                   description="Number of invalidations" />
+           <metric property="LockManager.NumberOfLocksAvailable" displayName="[LockManager] Number of locks available" displayType="detail" units="none" dataType="measurement"
+                   description="The number of exclusive locks that are available." />
+           <metric property="LockManager.NumberOfLocksHeld" displayName="[LockManager] Number of locks held" displayType="detail" units="none" dataType="measurement"
+                   description="The number of exclusive locks that are held." />
+           <metric property="LockManager.ConcurrencyLevel" displayName="[LockManager] Concurrency level" displayType="detail" units="none" dataType="trait"
+                   description="The concurrency level that the MVCC Lock Manager has been configured with." />
            <metric property="CacheLoader.CacheLoaderLoads" displayName="[CacheLoader] Number of cache store loads" displayType="detail" units="none" dataType="measurement"
                    description="Number of entries loaded from cache store" />
            <metric property="CacheLoader.CacheLoaderMisses" displayName="[CacheLoader] Number of cache store load misses" displayType="detail" units="none" dataType="measurement"
                    description="Number of entries that did not exist in cache store" />
-           <metric property="DeadlockDetectingLockManager.NumberOfLocksAvailable" displayName="[DeadlockDetectingLockManager] Number of locks available" displayType="detail" units="none" dataType="measurement"
-                   description="The number of exclusive locks that are available." />
-           <metric property="DeadlockDetectingLockManager.OverlapWithNotDeadlockAwareLockOwners" displayName="[DeadlockDetectingLockManager] Number of unsolvable deadlock situations" displayType="detail" units="none" dataType="measurement"
-                   description="Number of situations when we try to determine a deadlock and the other lock owner is NOT a transaction. In this scenario we cannot run the deadlock detection mechanism" />
-           <metric property="DeadlockDetectingLockManager.DetectedLocalDeadlocks" displayName="[DeadlockDetectingLockManager] Number of local transaction that were roll backed due to deadlocks" displayType="detail" units="none" dataType="measurement"
-                   description="Number of local transaction that were roll backed due to deadlocks" />
-           <metric property="DeadlockDetectingLockManager.LocallyInterruptedTransactions" displayName="[DeadlockDetectingLockManager] Number of interrupted local transactions" displayType="detail" units="none" dataType="measurement"
-                   description="Number of locally originated transactions that were interrupted as a deadlock situation was detected" />
-           <metric property="DeadlockDetectingLockManager.NumberOfLocksHeld" displayName="[DeadlockDetectingLockManager] Number of locks held" displayType="detail" units="none" dataType="measurement"
-                   description="The number of exclusive locks that are held." />
-           <metric property="DeadlockDetectingLockManager.ConcurrencyLevel" displayName="[DeadlockDetectingLockManager] Concurrency level" displayType="detail" units="none" dataType="trait"
-                   description="The concurrency level that the MVCC Lock Manager has been configured with." />
-           <metric property="DeadlockDetectingLockManager.TotalNumberOfDetectedDeadlocks" displayName="[DeadlockDetectingLockManager] Number of total detected deadlocks" displayType="detail" units="none" dataType="measurement"
-                   description="Total number of local detected deadlocks" />
-           <metric property="DeadlockDetectingLockManager.DetectedRemoteDeadlocks" displayName="[DeadlockDetectingLockManager] Number of remote transaction that were roll backed due to deadlocks" displayType="detail" units="none" dataType="measurement"
-                   description="Number of remote transaction that were roll backed due to deadlocks" />
-           <metric property="CacheStore.CacheLoaderStores" displayName="[CacheStore] Number of cache stores" displayType="detail" units="none" dataType="measurement"
-                   description="number of cache loader stores" />
-           <metric property="ConditionalExecutorService.KeepAliveTime" displayName="[ConditionalExecutorService] Keep Alive Time of a Idle Thread" displayType="detail" units="milliseconds" dataType="measurement"
-                   description="The keep alive time of an idle thread in the thread pool (milliseconds)" />
-           <metric property="ConditionalExecutorService.UsagePercentage" displayName="[ConditionalExecutorService] Percentage of Active Threads" displayType="summary" units="percentage" dataType="measurement"
-                   description="The approximate percentage of active threads in the thread pool" />
-           <metric property="ConditionalExecutorService.MaximumPoolSize" displayName="[ConditionalExecutorService] Maximum Number of Threads" displayType="detail" units="none" dataType="measurement"
-                   description="The maximum number of threads in the thread pool" />
-           <metric property="ConditionalExecutorService.CorePoolSize" displayName="[ConditionalExecutorService] Minimum Number of Threads" displayType="detail" units="none" dataType="measurement"
-                   description="The minimum number of threads in the thread pool" />
-           <metric property="SequentialTotalOrderManager.AverageValidationDuration" displayName="[SequentialTotalOrderManager] Average Validation Duration" displayType="summary" units="milliseconds" dataType="measurement"
-                   description="Average duration of a transaction validation (milliseconds)" />
            <metric property="ParallelTotalOrderManager.AverageWaitingTimeInQueue" displayName="[ParallelTotalOrderManager] Average Waiting Duration In Queue" displayType="summary" units="milliseconds" dataType="measurement"
                    description="Average time in the queue before the validation (milliseconds)" />
            <metric property="ParallelTotalOrderManager.AverageValidationDuration" displayName="[ParallelTotalOrderManager] Average Validation Duration" displayType="summary" units="milliseconds" dataType="measurement"
@@ -1199,18 +1211,6 @@
                    description="Number of cache removal hits" />
            <metric property="Statistics.Misses" displayName="[Statistics] Number of cache misses" displayType="summary" units="none" dataType="measurement"
                    description="Number of cache attribute misses" />
-           <metric property="Activation.CacheLoaderLoads" displayName="[Activation] Number of cache store loads" displayType="detail" units="none" dataType="measurement"
-                   description="Number of entries loaded from cache store" />
-           <metric property="Activation.CacheLoaderMisses" displayName="[Activation] Number of cache store load misses" displayType="detail" units="none" dataType="measurement"
-                   description="Number of entries that did not exist in cache store" />
-           <metric property="Activation.Activations" displayName="[Activation] Number of cache entries activated" displayType="detail" units="none" dataType="measurement"
-                   description="Number of activation events" />
-           <metric property="LockManager.NumberOfLocksAvailable" displayName="[LockManager] Number of locks available" displayType="detail" units="none" dataType="measurement"
-                   description="The number of exclusive locks that are available." />
-           <metric property="LockManager.NumberOfLocksHeld" displayName="[LockManager] Number of locks held" displayType="detail" units="none" dataType="measurement"
-                   description="The number of exclusive locks that are held." />
-           <metric property="LockManager.ConcurrencyLevel" displayName="[LockManager] Concurrency level" displayType="detail" units="none" dataType="trait"
-                   description="The concurrency level that the MVCC Lock Manager has been configured with." />
 
 
        </service>
