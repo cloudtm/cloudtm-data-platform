@@ -1,4 +1,4 @@
-<img src="images/logo.png" alt="Cloud-TM project" height="315" width="495">
+<a href="http://www.cloudtm.eu"><img src="images/logo.png" alt="Cloud-TM project" height="315" width="495"></a>
 
 Cloud-TM Data Platform
 =============
