@@ -1,4 +1,4 @@
-<a href="http://www.cloudtm.eu"><img src="images/logo.png" alt="Cloud-TM project" height="315" width="495"></a>
+<a href="http://www.cloudtm.eu"><img src="images/logo.png" alt="Cloud-TM project" height="160" width="250"></a>
 
 
 Cloud-TM
