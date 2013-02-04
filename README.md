@@ -13,3 +13,6 @@ This work was generated in the framework of the Specific Targeted Research Proje
 <img src="images/ecism.png" alt="European Commission">
 <img src="images/7thframework.png" alt="Seventh Framework">
 
+Copyright
+============
+The Cloud-TM Project is Copyright © 2010-2013 Cloud-TM Consortium. It is free software, and may be redistributed under the terms specified in the LICENSING.txt file.
