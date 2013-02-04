@@ -1,7 +1,8 @@
 <a href="http://www.cloudtm.eu"><img src="images/logo.png" alt="Cloud-TM project" height="315" width="495"></a>
 
-== Cloud-TM
 
+Cloud-TM
+============
 
 This GitHub repository contains the source code, binaries and example applications associated with the Cloud-TM Data Platform.
 
@@ -13,6 +14,7 @@ This work was generated in the framework of the Specific Targeted Research Proje
 <img src="images/ecism.png" alt="European Commission">
 <img src="images/7thframework.png" alt="Seventh Framework">
 
-== Copyright
 
+Copyright
+============
 The Cloud-TM Project is Copyright © 2010-2013 Cloud-TM Consortium. It is free software, and may be redistributed under the terms specified in the LICENSING.txt file.
